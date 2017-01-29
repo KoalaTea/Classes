@@ -14,12 +14,12 @@ class WebServer(object):
             self.errlog = "/var/log/mywebserv/mywebserv.log"
             self.methods = [ "PUT", "GET", "PUT", "DELETE", "CONNECT" ]
             self.code = []
-            self.root = "/var/www/"
+            self.root = "/var/www"
 
 
     def _response(self, method, resource, data=''):
         if(method not in self.methods):
-            if(os.is_file(self.root + "405.html")):
+            if(os.is_file(self.root + "/405.html")):
                 response_data = "have 405.html"
             else:
                 response_data = "no 405.html"
@@ -29,16 +29,19 @@ class WebServer(object):
             response+="\r\n\r\n"
             response+=response_data
             return response
-        else:
-            pass
-
-    def _parse(self, client_data):
-        request = Request(client_data)
-        method = request.get_method()
-        resource = request.get_resource()
-        data = request.data
-
-        self._response(method, resource, data)
+        elif(method == "GET"):
+            if(any(isfile(join(self.root, i)) for i in listdir(self.root))):
+                pass
+            else:
+                if(os.is_file(self.root + "/404.html")):
+                    response_data = "have 405.html"
+                else:
+                    response_data = "no 404.html"
+                response= "HTTP/1.1 404 FILE NOT FOUND" + "\r\n"
+                response+="Content-Length: " + str(response_data.len()) + "\r\n"
+                response+="\r\n\r\n"
+                response+=response_data
+                return response
 
     def _handle_client(self, client_socket):
         full_data = ''
@@ -47,8 +50,14 @@ class WebServer(object):
             full_data = full_data + data
             if not data:
                 break
+        request = Request(client_data)
+        method = request.get_method()
+        resource = request.get_resource()
+        data = request.data
 
-        self._parse(full_data)
+        response = self._response(method, resource, data)
+        client_socket.send(response)
+
         client_socket.close()
 
     def serve_web(self):
