@@ -5,12 +5,12 @@ class Request(object):
         self.headers = client_data_list[0]
         self.data = client_data_list[1]
 
-    def get_method():
+    def get_method(self):
         headers_list = self.headers.split("\r\n")
         request_list = headers_list[0].split()
         return request_list[0]
 
-    def get_resource():
+    def get_resource(self):
         headers_list = self.headers.split("\r\n")
         request_list = headers_list[0].split()
         return request_list[1]
