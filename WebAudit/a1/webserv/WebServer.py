@@ -87,18 +87,33 @@ class WebServer(object):
             if not data:
                 break
         '''
+        while "\r\n\r\n" not in full_data:
+            data = client_socket.recv(1024)
+            full_data = full_data + data
+            if not data:
+                break
 
-        full_data = client_socket.recv(1024)
+        request = Request(full_data)
+        if("Content-Length" in request.headers):
+            current_data_len = len(request.data)
+            print(current_data_len)
+            content_len = int(request.headers["Content-Length"])
+            print(content_len)
+            if(current_data_len < content_len):
+                data = client_socket.recv(content_len - current_data_len)
+                request.data += data
+                request.raw += data
+
+        #full_data = client_socket.recv(1024)
 
         #temp testing stuff
-        print(repr(full_data))
-        print(full_data)
-        request = Request(full_data)
+        print(repr(request.raw))
+        print(request.raw)
+        print(request.headers)
         method = request.get_method()
         resource = request.get_resource()
-        data = request.data
 
-        response = self._response(method, resource, data)
+        response = self._response(method, resource, request.data)
         print(response)
         client_socket.send(response)
 

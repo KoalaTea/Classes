@@ -21,5 +21,8 @@ def usesocket():
 
 def userequests():
     r=requests.post("http://127.0.0.1/", json={"what": "kay"})
+    print(r)
+    print(r.headers)
+    print(r.text)
 
 userequests()
