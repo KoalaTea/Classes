@@ -5,8 +5,19 @@ from Request import Request
 import threading
 #import subproccess #php?
 
+# WebServer Class to deal with all web things
 class WebServer(object):
 
+    # __init__
+    #   Constructor
+    #
+    # Arguments:
+    #   ip          - the ip the webserver should bind to
+    #   port        - the port the webserver should bind to
+    #   config_file - a config_file to define settings for the webserver
+    #
+    # Returns:
+    #   Webserver object
     def __init__(self, ip="0.0.0.0", port=80, config_file=None):
         if(config_file):
             pass
@@ -21,7 +32,14 @@ class WebServer(object):
             self.root = "/var/www/html"
             self.slash = "/index.html"
 
-
+    # _error_response
+    #   Returns error responses based on the error code
+    #
+    # Arguements:
+    #   error       - The error code
+    #
+    # Returns
+    #   response    - The http response headers and body
     def _error_response(self, error):
         if(error==400):
             if(isfile(self.root + "/400.html")):
@@ -95,6 +113,15 @@ class WebServer(object):
             response+="\r\n\r\n"
             return response
 
+    # _response
+    #   Decides how to deal with an http request and crafts the response
+    #
+    # Arguements
+    #   request     - The request object representing the http request from the client
+    #   data        - Data posted in the request if it exists
+    #
+    # Returns
+    #   response    - Servers http response to be sent back to the client
     def _response(self, request, data=''):
         if(request.error):
             return self._error_response(400)
@@ -132,6 +159,14 @@ class WebServer(object):
         elif(method == "CONNECT"):
             pass
 
+    # _handle_client
+    #   Handles client connections, recieving the request and sending a response
+    #
+    # Arguments
+    #   client_socket   - The client connection socket
+    #
+    # Returns
+    #   None
     def _handle_client(self, client_socket):
         full_data = ''
 
@@ -142,6 +177,7 @@ class WebServer(object):
             if not data:
                 break
         '''
+        # have a timeout
         while "\r\n\r\n" not in full_data:
             data = client_socket.recv(1024)
             full_data = full_data + data
@@ -174,6 +210,14 @@ class WebServer(object):
 
         client_socket.close()
 
+    # serve_web
+    #   starts the webserver and handles connections sending them to _handle_client
+    #
+    # Arguments
+    #   None
+    #
+    # Returns
+    #   None
     def serve_web(self):
         try:
             server_socket=socket.socket(socket.AF_INET, socket.SOCK_STREAM)

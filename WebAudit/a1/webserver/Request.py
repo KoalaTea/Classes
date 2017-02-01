@@ -1,3 +1,4 @@
+# Request class to hold and parse information in an http request
 class Request(object):
 
     def __init__(self, client_data):
