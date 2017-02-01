@@ -12,6 +12,12 @@ class Request(object):
         self.data = client_data_list[1]
         self.request_line = split_headers[0]
         self.raw = client_data
+        self.error = False
+        if(self.request_line.split()[-1] not in ("HTTP/1.0", "HTTP/1.1")):
+            self.error = True
+        elif(self.request_line.split()[-1] == "HTTP/1.1"):
+            if("Host" not in self.headers):
+                self.error = True
 
     def get_method(self):
         request_list = self.request_line.split()

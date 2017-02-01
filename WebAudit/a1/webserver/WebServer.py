@@ -1,7 +1,9 @@
 import socket
 from os import listdir
-from os.path import isfile
+from os.path import isfile, abspath
 from Request import Request
+import threading
+#import subproccess #php?
 
 class WebServer(object):
 
@@ -16,12 +18,49 @@ class WebServer(object):
             self.implemented_methods = [ "PUT", "GET", "POST", "DELETE", "CONNECT" ]
             self.allowed_methods = [ "PUT", "GET", "POST", "DELETE", "CONNECT" ]
             self.code = []
-            self.root = "/var/www"
+            self.root = "/var/www/html"
             self.slash = "/index.html"
 
 
     def _error_response(self, error):
-        if(error==405):
+        if(error==400):
+            if(isfile(self.root + "/400.html")):
+                response_data = "have 400.html"
+            else:
+                response_data = "no 400.html"
+            response= "HTTP/1.1 400 Bad Request" + "\r\n"
+            response+="Content-Length: " + str(len(response_data)) + "\r\n"
+            response+="\r\n"
+            response+=response_data
+            response+="\r\n\r\n"
+            return response
+
+        elif(error==401):
+            if(isfile(self.root + "/401.html")):
+                response_data = "have 401.html"
+            else:
+                response_data = "no 401.html"
+            response= "HTTP/1.1 401 Unauthorized" + "\r\n"
+            response+="Allow: " + ", ".join(self.allowed_methods) + "\r\n"
+            response+="Content-Length: " + str(len(response_data)) + "\r\n"
+            response+="\r\n"
+            response+=response_data
+            response+="\r\n\r\n"
+            return response
+
+        elif(error==403):
+            if(isfile(self.root + "/403.html")):
+                response_data = "have 403.html"
+            else:
+                response_data = "no 403.html"
+            response= "HTTP/1.1 403 Forbidden" + "\r\n"
+            response+="Content-Length: " + str(len(response_data)) + "\r\n"
+            response+="\r\n"
+            response+=response_data
+            response+="\r\n\r\n"
+            return response
+
+        elif(error==405):
             if(isfile(self.root + "/405.html")):
                 response_data = "have 405.html"
             else:
@@ -51,12 +90,16 @@ class WebServer(object):
             response= "HTTP/1.1 501 Method Not Implemented" + "\r\n"
             response+="Allow: " + ",".join(self.allowed_methods) + "\r\n"
             response+="Content-Length: " + str(len(response_data)) + "\r\n"
-            respones+="\r\n"
+            response+="\r\n"
             response+=response_data
             response+="\r\n\r\n"
             return response
 
-    def _response(self, method, resource, data=''):
+    def _response(self, request, data=''):
+        if(request.error):
+            return self._error_response(400)
+        method = request.get_method()
+        resource = request.get_resource()
         if(method not in self.implemented_methods):
             return self._error_response(501)
         elif(method not in self.allowed_methods):
@@ -64,18 +107,30 @@ class WebServer(object):
         elif(method == "GET" or method == "POST"):
             if(resource=="/"):
                 resource = self.slash
-            if(any(isfile(self.root + resource) for resource in listdir(self.root))):
+            requested_file = self.root + resource
+            if(isfile(requested_file) and abspath(requested_file)[:len(self.root)] == self.root):
                 #is a responses data suppossed to be \r\n per line?
-                with open(join(self.root, resource), 'r') as opened_file:
-                    response_data = opened_file.read
-                    opened_file.close()
-                response= "HTTP/1.1 200 OK" + "\r\n"
-                response+="Content-Length: " + str(len(response_data)) + "\r\n"
-                response+="\r\n"
-                response+=response_data
-                response+="\r\n\r\n"
+                try:
+                    with open(requested_file, 'r') as opened_file:
+                        response_data = opened_file.read()
+                        opened_file.close()
+                    response= "HTTP/1.1 200 OK" + "\r\n"
+                    response+="Content-Length: " + str(len(response_data)) + "\r\n"
+                    response+="\r\n"
+                    response+=response_data
+                    return response
+                except IOError:
+                    return self._error_response(403)
             else:
                 return self._error_response(404)
+        elif(method == "PUT"):
+            #201 success 200 modified
+            pass
+        elif(method == "DELETE"):
+            #200 completed 204 No Content (enacted but no content returned) 202 accepted but not enact
+            pass
+        elif(method == "CONNECT"):
+            pass
 
     def _handle_client(self, client_socket):
         full_data = ''
@@ -113,7 +168,7 @@ class WebServer(object):
         method = request.get_method()
         resource = request.get_resource()
 
-        response = self._response(method, resource, request.data)
+        response = self._response(request, request.data)
         print(response)
         client_socket.send(response)
 
@@ -127,12 +182,7 @@ class WebServer(object):
             while 1:
                 (client_socket, address) = server_socket.accept()
                 self._handle_client(client_socket)
+                #threading.Thread(target=self._handle_client, args=(client_socket,))
         except KeyboardInterrupt:
             print("Killing server due to SIGINT")
             server_socket.close()
-
-def main():
-    serv = WebServer("127.0.0.1", 80)
-    serv.serve_web()
-
-main()
