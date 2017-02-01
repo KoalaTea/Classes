@@ -78,7 +78,7 @@ class WebServer(object):
             response+="\r\n\r\n"
             return response
 
-       elif(error==404):
+        elif(error==404):
             if(isfile(self.root + "/404.html")):
                 response_data = "have 405.html"
             else:
@@ -90,7 +90,7 @@ class WebServer(object):
             response+="\r\n\r\n"
             return response
 
-       elif(error==405):
+        elif(error==405):
             if(isfile(self.root + "/405.html")):
                 response_data = "have 405.html"
             else:
