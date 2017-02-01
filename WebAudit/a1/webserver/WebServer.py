@@ -78,25 +78,25 @@ class WebServer(object):
             response+="\r\n\r\n"
             return response
 
-        elif(error==405):
-            if(isfile(self.root + "/405.html")):
+       elif(error==404):
+            if(isfile(self.root + "/404.html")):
                 response_data = "have 405.html"
             else:
-                response_data = "no 405.html"
-            response= "HTTP/1.1 405 Method Not Allowed" + "\r\n"
-            response+="Allow: " + ", ".join(self.allowed_methods) + "\r\n"
+                response_data = "no 404.html"
+            response= "HTTP/1.1 404 File Not Found" + "\r\n"
             response+="Content-Length: " + str(len(response_data)) + "\r\n"
             response+="\r\n"
             response+=response_data
             response+="\r\n\r\n"
             return response
 
-        elif(error==404):
-            if(isfile(self.root + "/404.html")):
+       elif(error==405):
+            if(isfile(self.root + "/405.html")):
                 response_data = "have 405.html"
             else:
-                response_data = "no 404.html"
-            response= "HTTP/1.1 404 File Not Found" + "\r\n"
+                response_data = "no 405.html"
+            response= "HTTP/1.1 405 Method Not Allowed" + "\r\n"
+            response+="Allow: " + ", ".join(self.allowed_methods) + "\r\n"
             response+="Content-Length: " + str(len(response_data)) + "\r\n"
             response+="\r\n"
             response+=response_data
