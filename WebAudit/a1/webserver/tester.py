@@ -19,6 +19,8 @@ def usesocket():
     #s.send("GET /../../../../etc/passwd HTTP/1.0\r\n\r\n")
     # normal req
     s.send("GET / HTTP/1.0\r\n\r\n")
+    # cgi req
+    #s.send("GET /cgi-bin/test.php HTTP/1.0")
     #s.close()
 
 
