@@ -31,6 +31,7 @@ class WebServer(object):
             self.code = []
             self.root = "/var/www/html"
             self.slash = "/index.html"
+            self.cgi = self.root + "/cgi-bin"
 
     # _error_response
     #   Returns error responses based on the error code
@@ -123,6 +124,20 @@ class WebServer(object):
     # Returns
     #   response    - Servers http response to be sent back to the client
     def _response(self, request, data=''):
+       if(True):
+           return self._run_method(request)
+       else:
+           return self._run_cgi(request)
+
+    # _run_method
+    #   Runs the requested method on the resource if the method is allowed and implemented
+    #
+    # Arguements
+    #   request     - The request object representing the http request from the client
+    #
+    # Returns
+    #   response    - Servers http response to be sent back to the client
+    def _run_method(self, request):
         if(request.error):
             return self._error_response(400)
         method = request.get_method()
@@ -155,9 +170,37 @@ class WebServer(object):
             pass
         elif(method == "DELETE"):
             #200 completed 204 No Content (enacted but no content returned) 202 accepted but not enact
-            pass
+            if(resource=="/"):
+                resource = self.slash
+            requested_file = self.root + resource
+            if(isfile(requested_file) and abspath(requested_file)[:len(self.root)] == self.root):
+                #is a responses data suppossed to be \r\n per line?
+                try:
+                    with open(requested_file, 'r') as opened_file:
+                        response_data = opened_file.read()
+                        opened_file.close()
+                    response= "HTTP/1.1 200 OK" + "\r\n"
+                    response+="Content-Length: " + str(len(response_data)) + "\r\n"
+                    response+="\r\n"
+                    response+=response_data
+                    return response
+                except IOError:
+                    return self._error_response(403)
+            else:
+                return self._error_response(204)
         elif(method == "CONNECT"):
             pass
+
+    # _run_cgi TODO
+    #   Run cgi to get responses
+    #
+    # Arguements
+    #   request     - The request object representing the http request from the client
+    #
+    # Returns
+    #   response    - Servers http response to be sent back to the client
+    def _run_cgi(self, request):
+        pass
 
     # _handle_client
     #   Handles client connections, recieving the request and sending a response
