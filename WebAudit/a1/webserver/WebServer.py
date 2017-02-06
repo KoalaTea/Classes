@@ -36,6 +36,25 @@ class WebServer(object):
             self.root = "/var/www/html/"
             self.slash = "index.html"
             self.cgi = "cgi-bin"
+            self.cgiaccess = { ".php":"php"}
+
+    # _resource_path
+    #   return the path for the resource requested
+    #
+    # Arguements
+    #   resource    - the resource part of the request line
+    #
+    # Returns
+    #   full_path   - the full path that the resource is located at
+    def _resource_path(self, resource):
+        if(resource=="/"):
+            full_path = self.root + self.slash
+        elif(resource[0] != "/"):
+            full_path = self.root + resource
+        else:
+            full_path = self.root + resource[1:]
+        return full_path
+
 
     # _error_response
     #   Returns error responses based on the error code
@@ -158,9 +177,8 @@ class WebServer(object):
 
         # if the method is a GET or POST request
         elif(method == "GET" or method == "POST"):
-            if(resource=="/"):
-                resource = self.slash
-            requested_file = self.root + resource
+            requested_file = self._resource_path(resource)
+
             if(isfile(requested_file) and abspath(requested_file)[:len(self.root)] == self.root):
                 #is a responses data suppossed to be \r\n per line?
                 try:
@@ -180,45 +198,35 @@ class WebServer(object):
         # if the method is a PUT request
         elif(method == "PUT"):
             #201 success 200 modified
-            if(resource=="/"):
-                resource = self.slash
-            requested_file = self.root + resource
+            requested_file = self._resource_path(resource)
+
             # if requested file exists
             if(isfile(requested_file) and abspath(requested_file)[:len(self.root)] == self.root):
-                #is a responses data suppossed to be \r\n per line?
-                try:
-                    with open(requested_file, 'w') as opened_file:
-                        # TODO
-                        opened_file.close()
-                    response= "HTTP/1.1 200 OK" + "\r\n"
-                    response+="Content-Length: " + str(len(response_data)) + "\r\n"
-                    response+="\r\n"
-                    response+=response_data
-                    return response
-                except IOError:
-                    return self._error_response(403)
+                response= "HTTP/1.1 200 OK" + "\r\n"
+                response+="Content-Length: " + str(len(response_data)) + "\r\n"
+                response+="\r\n"
             # if requested file does not exist
             else:
-                 try:
-                    with open(requested_file, 'w') as opened_file:
-                        # TODO
-                        opened_file.close()
-                    response= "HTTP/1.1 201 OK" + "\r\n"
-                    response+="Content-Length: " + str(len(response_data)) + "\r\n"
-                    response+="\r\n"
-                    response+=response_data
-                    return response
-                except IOError:
-                    return self._error_response(403)
+                response= "HTTP/1.1 201 OK" + "\r\n"
+                response+="Content-Length: " + str(len(response_data)) + "\r\n"
+                response+="\r\n"
+
+            # make the file
+            try:
+                with open(requested_file, 'w') as opened_file:
+                    # TODO
+                    opened_file.close()
+                response+=response_data
+                return response
+            except IOError:
+                return self._error_response(403)
 
         # if the method is a DELETE request
         elif(method == "DELETE"):
             #200 completed 204 No Content (enacted but no content returned) 202 accepted but not enact
-            if(resource=="/"):
-                resource = self.slash
-            requested_file = self.root + resource
+            requested_file = self._resource_path(resource)
+
             if(isfile(requested_file) and abspath(requested_file)[:len(self.root)] == self.root):
-                #is a responses data suppossed to be \r\n per line?
                 try:
                     remove(requested_file)
                 except IOError:
@@ -240,6 +248,83 @@ class WebServer(object):
     #   response    - Servers http response to be sent back to the client
     def _run_cgi(self, request):
         print("got cgi")
+        # if the request is bad
+        if(request.error):
+            return self._error_response(400)
+        method = request.get_method()
+        resource = request.get_resource()
+
+        # if the method is not implemeneted
+        if(method not in self.implemented_methods):
+            return self._error_response(501)
+
+        # if the method is not allowed
+        elif(method not in self.allowed_methods):
+            return self._error_response(405)
+
+        # if the method is a GET or POST request
+        elif(method == "GET" or method == "POST"):
+            requested_file = self._resource_path(resource)
+
+            if(isfile(requested_file) and abspath(requested_file)[:len(self.root)] == self.root):
+                #is a responses data suppossed to be \r\n per line?
+                try:
+                    with open(requested_file, 'r') as opened_file:
+                        response_data = opened_file.read()
+                        opened_file.close()
+                    response= "HTTP/1.1 200 OK" + "\r\n"
+                    response+="Content-Length: " + str(len(response_data)) + "\r\n"
+                    response+="\r\n"
+                    response+=response_data
+                    return response
+                except IOError:
+                    return self._error_response(403)
+            else:
+                return self._error_response(404)
+
+        # if the method is a PUT request
+        elif(method == "PUT"):
+            #201 success 200 modified
+            requested_file = self._resource_path(resource)
+
+            # if requested file exists
+            if(isfile(requested_file) and abspath(requested_file)[:len(self.root)] == self.root):
+                response= "HTTP/1.1 200 OK" + "\r\n"
+                response+="Content-Length: " + str(len(response_data)) + "\r\n"
+                response+="\r\n"
+             # if requested file does not exist
+            else:
+                response= "HTTP/1.1 201 OK" + "\r\n"
+                response+="Content-Length: " + str(len(response_data)) + "\r\n"
+                response+="\r\n"
+
+            # makae the file
+            try:
+                with open(requested_file, 'w') as opened_file:
+                    # TODO
+                    opened_file.close()
+                response+=response_data
+                return response
+            except IOError:
+                return self._error_response(403)
+
+        # if the method is a DELETE request
+        elif(method == "DELETE"):
+            #200 completed 204 No Content (enacted but no content returned) 202 accepted but not enact
+            requested_file = self._resource_path(resource)
+
+            if(isfile(requested_file) and abspath(requested_file)[:len(self.root)] == self.root):
+                try:
+                    remove(requested_file)
+                except IOError:
+                    return self._error_response(403)
+            else:
+                return self._error_response(204)
+
+        # if the method is a CONNECT request
+        elif(method == "CONNECT"):
+            pass
+
 
     # _handle_client
     #   Handles client connections, recieving the request and sending a response
@@ -308,6 +393,7 @@ class WebServer(object):
             while 1:
                 (client_socket, address) = server_socket.accept()
                 self._handle_client(client_socket)
+                # Threading did not work when I last tried. I will come back to this
                 #threading.Thread(target=self._handle_client, args=(client_socket,))
         except KeyboardInterrupt:
             print("Killing server due to SIGINT")
