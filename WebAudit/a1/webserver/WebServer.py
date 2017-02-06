@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# TODO:
+#   move to 3.4 dealing with sockets
 import socket
 from os import listdir, remove
 from os.path import isfile, abspath
@@ -29,9 +33,9 @@ class WebServer(object):
             self.implemented_methods = [ "PUT", "GET", "POST", "DELETE", "CONNECT" ]
             self.allowed_methods = [ "PUT", "GET", "POST", "DELETE", "CONNECT" ]
             self.code = []
-            self.root = "/var/www/html"
-            self.slash = "/index.html"
-            self.cgi = "/cgi-bin"
+            self.root = "/var/www/html/"
+            self.slash = "index.html"
+            self.cgi = "cgi-bin"
 
     # _error_response
     #   Returns error responses based on the error code
@@ -43,7 +47,7 @@ class WebServer(object):
     #   response    - The http response headers and body
     def _error_response(self, error):
         if(error==400):
-            if(isfile(self.root + "/400.html")):
+            if(isfile(self.root + "400.html")):
                 response_data = "have 400.html"
             else:
                 response_data = "no 400.html"
@@ -55,7 +59,7 @@ class WebServer(object):
             return response
 
         elif(error==401):
-            if(isfile(self.root + "/401.html")):
+            if(isfile(self.root + "401.html")):
                 response_data = "have 401.html"
             else:
                 response_data = "no 401.html"
@@ -68,7 +72,7 @@ class WebServer(object):
             return response
 
         elif(error==403):
-            if(isfile(self.root + "/403.html")):
+            if(isfile(self.root + "403.html")):
                 response_data = "have 403.html"
             else:
                 response_data = "no 403.html"
@@ -80,7 +84,7 @@ class WebServer(object):
             return response
 
         elif(error==404):
-            if(isfile(self.root + "/404.html")):
+            if(isfile(self.root + "404.html")):
                 response_data = "have 405.html"
             else:
                 response_data = "no 404.html"
@@ -92,7 +96,7 @@ class WebServer(object):
             return response
 
         elif(error==405):
-            if(isfile(self.root + "/405.html")):
+            if(isfile(self.root + "405.html")):
                 response_data = "have 405.html"
             else:
                 response_data = "no 405.html"
@@ -138,14 +142,21 @@ class WebServer(object):
     # Returns
     #   response    - Servers http response to be sent back to the client
     def _run_method(self, request):
+        # if the request is bad
         if(request.error):
             return self._error_response(400)
         method = request.get_method()
         resource = request.get_resource()
+
+        # if the method is not implemeneted
         if(method not in self.implemented_methods):
             return self._error_response(501)
+
+        # if the method is not allowed
         elif(method not in self.allowed_methods):
             return self._error_response(405)
+
+        # if the method is a GET or POST request
         elif(method == "GET" or method == "POST"):
             if(resource=="/"):
                 resource = self.slash
@@ -165,9 +176,42 @@ class WebServer(object):
                     return self._error_response(403)
             else:
                 return self._error_response(404)
+
+        # if the method is a PUT request
         elif(method == "PUT"):
             #201 success 200 modified
-            pass
+            if(resource=="/"):
+                resource = self.slash
+            requested_file = self.root + resource
+            # if requested file exists
+            if(isfile(requested_file) and abspath(requested_file)[:len(self.root)] == self.root):
+                #is a responses data suppossed to be \r\n per line?
+                try:
+                    with open(requested_file, 'w') as opened_file:
+                        # TODO
+                        opened_file.close()
+                    response= "HTTP/1.1 200 OK" + "\r\n"
+                    response+="Content-Length: " + str(len(response_data)) + "\r\n"
+                    response+="\r\n"
+                    response+=response_data
+                    return response
+                except IOError:
+                    return self._error_response(403)
+            # if requested file does not exist
+            else:
+                 try:
+                    with open(requested_file, 'w') as opened_file:
+                        # TODO
+                        opened_file.close()
+                    response= "HTTP/1.1 201 OK" + "\r\n"
+                    response+="Content-Length: " + str(len(response_data)) + "\r\n"
+                    response+="\r\n"
+                    response+=response_data
+                    return response
+                except IOError:
+                    return self._error_response(403)
+
+        # if the method is a DELETE request
         elif(method == "DELETE"):
             #200 completed 204 No Content (enacted but no content returned) 202 accepted but not enact
             if(resource=="/"):
@@ -181,6 +225,8 @@ class WebServer(object):
                     return self._error_response(403)
             else:
                 return self._error_response(204)
+
+        # if the method is a CONNECT request
         elif(method == "CONNECT"):
             pass
 
