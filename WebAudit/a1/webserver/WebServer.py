@@ -215,6 +215,7 @@ class WebServer(object):
             try:
                 with open(requested_file, 'w') as opened_file:
                     # TODO
+                    opened_file.write(request.data)
                     opened_file.close()
                 response+=response_data
                 return response
