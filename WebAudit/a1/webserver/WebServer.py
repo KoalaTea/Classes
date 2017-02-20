@@ -3,7 +3,7 @@
 # TODO:
 #   move to 3.4 dealing with sockets
 import socket
-from os import listdir, remove
+from os import listdir, remove, environment
 from os.path import isfile, abspath
 from Request import Request
 import threading
@@ -263,68 +263,19 @@ class WebServer(object):
         elif(method not in self.allowed_methods):
             return self._error_response(405)
 
-        # if the method is a GET or POST request
-        elif(method == "GET" or method == "POST"):
-            requested_file = self._resource_path(resource)
+        else:
+            cgi_file = open(request.get_resource())
+            shebang = cgi_file.readlines()[0]
+            if(shebang.startswith("#!")):
+                location = shebang[2:]
+                if(isfile(location)):
+                    environment["REQUEST_METHOD"] = request.get_method()
+                    environment["SERVER_PROTOCOL"] = request.protocol
+                    environment["REQUEST_URI"] = request.get_resource()
+                    environment["HTTP_CONNECTION"] = request.get_method()
+                    #environment["SERVER_PORT"] =
+                    #environment["REMOTE_ADDR"] = request.get_method()
 
-            if(isfile(requested_file) and abspath(requested_file)[:len(self.root)] == self.root):
-                #is a responses data suppossed to be \r\n per line?
-                try:
-                    with open(requested_file, 'r') as opened_file:
-                        response_data = opened_file.read()
-                        opened_file.close()
-                    response= "HTTP/1.1 200 OK" + "\r\n"
-                    response+="Content-Length: " + str(len(response_data)) + "\r\n"
-                    response+="\r\n"
-                    response+=response_data
-                    return response
-                except IOError:
-                    return self._error_response(403)
-            else:
-                return self._error_response(404)
-
-        # if the method is a PUT request
-        elif(method == "PUT"):
-            #201 success 200 modified
-            requested_file = self._resource_path(resource)
-
-            # if requested file exists
-            if(isfile(requested_file) and abspath(requested_file)[:len(self.root)] == self.root):
-                response= "HTTP/1.1 200 OK" + "\r\n"
-                response+="Content-Length: " + str(len(response_data)) + "\r\n"
-                response+="\r\n"
-             # if requested file does not exist
-            else:
-                response= "HTTP/1.1 201 OK" + "\r\n"
-                response+="Content-Length: " + str(len(response_data)) + "\r\n"
-                response+="\r\n"
-
-            # makae the file
-            try:
-                with open(requested_file, 'w') as opened_file:
-                    # TODO
-                    opened_file.close()
-                response+=response_data
-                return response
-            except IOError:
-                return self._error_response(403)
-
-        # if the method is a DELETE request
-        elif(method == "DELETE"):
-            #200 completed 204 No Content (enacted but no content returned) 202 accepted but not enact
-            requested_file = self._resource_path(resource)
-
-            if(isfile(requested_file) and abspath(requested_file)[:len(self.root)] == self.root):
-                try:
-                    remove(requested_file)
-                except IOError:
-                    return self._error_response(403)
-            else:
-                return self._error_response(204)
-
-        # if the method is a CONNECT request
-        elif(method == "CONNECT"):
-            pass
 
 
     # _handle_client
