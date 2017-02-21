@@ -81,7 +81,6 @@ class WebServer(object):
             response+="Content-Length: " + str(len(response_data)) + "\r\n"
             response+="\r\n"
             response+=response_data
-            response+="\r\n\r\n"
             return response
 
         elif(error==401):
@@ -94,7 +93,6 @@ class WebServer(object):
             response+="Content-Length: " + str(len(response_data)) + "\r\n"
             response+="\r\n"
             response+=response_data
-            response+="\r\n\r\n"
             return response
 
         elif(error==403):
@@ -106,7 +104,6 @@ class WebServer(object):
             response+="Content-Length: " + str(len(response_data)) + "\r\n"
             response+="\r\n"
             response+=response_data
-            response+="\r\n\r\n"
             return response
 
         elif(error==404):
@@ -118,7 +115,6 @@ class WebServer(object):
             response+="Content-Length: " + str(len(response_data)) + "\r\n"
             response+="\r\n"
             response+=response_data
-            response+="\r\n\r\n"
             return response
 
         elif(error==405):
@@ -131,10 +127,9 @@ class WebServer(object):
             response+="Content-Length: " + str(len(response_data)) + "\r\n"
             response+="\r\n"
             response+=response_data
-            response+="\r\n\r\n"
             return response
 
-        elif(error=500):
+        elif(error==500):
             response_data = """
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html><head>
@@ -156,7 +151,7 @@ in the server error log.</p>
             response+="Content-Length: " + str(len(response_data)) + "\r\n"
             response+="\r\n"
             response+=response_data
-            response+="\r\n\r\n"
+            return response
 
         elif(error==501):
             response_data = "oops 501"
@@ -165,7 +160,6 @@ in the server error log.</p>
             response+="Content-Length: " + str(len(response_data)) + "\r\n"
             response+="\r\n"
             response+=response_data
-            response+="\r\n\r\n"
             return response
 
     # _response
