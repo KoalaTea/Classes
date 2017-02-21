@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 # TODO:
 #   move to 3.4 dealing with sockets
+#   Connect method
 import socket
-from os import listdir, remove, environment
+from os import listdir, remove, environ
 from os.path import isfile, abspath
 from Request import Request
 import threading
-#import subproccess #php?
+import subprocess
+#import subprocess #php?
 
 # WebServer Class to deal with all web things
 class WebServer(object):
@@ -35,7 +37,8 @@ class WebServer(object):
             self.code = []
             self.root = "/var/www/html/"
             self.slash = "index.html"
-            self.cgi = "cgi-bin"
+            self.aliases = {"/cgi-bin" : "/var/www/cgi-bin/"}
+            self.cgi = "/cgi-bin"
             self.cgiaccess = { ".php":"php"}
 
     # _resource_path
@@ -51,6 +54,10 @@ class WebServer(object):
             full_path = self.root + self.slash
         elif(resource[0] != "/"):
             full_path = self.root + resource
+        elif(len(self.aliases) != 0):
+            for alias in self.aliases:
+                if(resource.startswith(alias)):
+                    full_path = self.aliases[alias] + resource[len(alias)+1:]
         else:
             full_path = self.root + resource[1:]
         return full_path
@@ -127,6 +134,30 @@ class WebServer(object):
             response+="\r\n\r\n"
             return response
 
+        elif(error=500):
+            response_data = """
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>500 Internal Server Error</title>
+</head><body>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error or
+misconfiguration and was unable to complete
+your request.</p>
+<p>Please contact the server administrator at
+ root@localhost to inform them of the time this error occurred,
+ and the actions you performed just before this error.</p>
+<p>More information about this error may be available
+in the server error log.</p>
+</body></html>
+"""
+            response= "HTTP/1.1 500 Internal Server Error" + "\r\n"
+            response+="Allow: " + ",".join(self.allowed_methods) + "\r\n"
+            response+="Content-Length: " + str(len(response_data)) + "\r\n"
+            response+="\r\n"
+            response+=response_data
+            response+="\r\n\r\n"
+
         elif(error==501):
             response_data = "oops 501"
             response= "HTTP/1.1 501 Method Not Implemented" + "\r\n"
@@ -147,7 +178,7 @@ class WebServer(object):
     # Returns
     #   response    - Servers http response to be sent back to the client
     def _response(self, request, data=''):
-        if(request.get_resource()[:len(self.cgi)] != self.cgi):
+        if(not request.get_resource().startswith(self.cgi)):
            return self._run_method(request)
         else:
            return self._run_cgi(request)
@@ -178,6 +209,7 @@ class WebServer(object):
         # if the method is a GET or POST request
         elif(method == "GET" or method == "POST"):
             requested_file = self._resource_path(resource)
+            print(requested_file)
 
             if(isfile(requested_file) and abspath(requested_file)[:len(self.root)] == self.root):
                 #is a responses data suppossed to be \r\n per line?
@@ -214,7 +246,6 @@ class WebServer(object):
             # make the file
             try:
                 with open(requested_file, 'w') as opened_file:
-                    # TODO
                     opened_file.write(request.data)
                     opened_file.close()
                 response+=response_data
@@ -239,7 +270,7 @@ class WebServer(object):
         elif(method == "CONNECT"):
             pass
 
-    # _run_cgi TODO
+    # _run_cgi
     #   Run cgi to get responses
     #
     # Arguements
@@ -247,6 +278,7 @@ class WebServer(object):
     #
     # Returns
     #   response    - Servers http response to be sent back to the client
+    #
     def _run_cgi(self, request):
         print("got cgi")
         # if the request is bad
@@ -264,18 +296,32 @@ class WebServer(object):
             return self._error_response(405)
 
         else:
-            cgi_file = open(request.get_resource())
-            shebang = cgi_file.readlines()[0]
-            if(shebang.startswith("#!")):
-                location = shebang[2:]
-                if(isfile(location)):
-                    environment["REQUEST_METHOD"] = request.get_method()
-                    environment["SERVER_PROTOCOL"] = request.protocol
-                    environment["REQUEST_URI"] = request.get_resource()
-                    environment["HTTP_CONNECTION"] = request.get_method()
-                    #environment["SERVER_PORT"] =
-                    #environment["REMOTE_ADDR"] = request.get_method()
+            cgi_resource = self._resource_path(request.get_resource())
+            if(isfile(cgi_resource)):
+                cgi_file = open(cgi_resource)
+                shebang = cgi_file.readlines()[0]
+                if(shebang.startswith("#!")):
+                    shebang_location = shebang[2:].strip()
+                    if(isfile(shebang_location)):
+                        environ["REQUEST_METHOD"] = request.get_method()
+                        environ["SERVER_PROTOCOL"] = request.protocol
+                        environ["REQUEST_URI"] = request.get_resource()
+                        environ["HTTP_CONNECTION"] = request.get_method()
+                        #environ["SERVER_PORT"] =
+                        #environ["REMOTE_ADDR"] = request.get_method()
+                        try:
+                            response = subprocess.Popen([shebang_location, cgi_resource], stdout=subprocess.PIPE).communicate()[0]
+                        except:
+                            return self._error_response(500)
+                        print("Response:" + response)
+                        return response
+                    else:
+                        return self._error_response(500)
+                else:
+                    return self._error_response(500)
 
+            else:
+                return self._error_response(404)
 
 
     # _handle_client
