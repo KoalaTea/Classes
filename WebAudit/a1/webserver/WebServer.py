@@ -25,21 +25,80 @@ class WebServer(object):
     # Returns:
     #   Webserver object
     def __init__(self, ip="0.0.0.0", port=80, config_file=None):
+
+        self.slash = "index.html"
+        self.aliases = {"/cgi-bin" : "/var/www/cgi-bin/"}
+        self.cgi = "/cgi-bin"
+        self.cgiaccess = { ".php":"php"}
+        self.implemented_methods = [ "PUT", "GET", "POST", "DELETE", "CONNECT" ]
+
         if(config_file):
-            pass
+            if(isfile(config_file)):
+                config = {}
+                lines = [line.rstrip('\n') for line in open('filename')]
+                for line in lines:
+                    if line.startswitch('#'):
+                        pass
+                    else:
+                        config_line = line.split(':')
+                        config[config_line[0]] = config_line[1].rstrip()
+                print(config)
+
+                if 'ip' in config:
+                    self.ip=config['ip']
+                else:
+                    self.ip = ip
+
+                if 'port' in config:
+                    self.port=int(config['port'])
+                else:
+                    self.port=port
+
+                if 'log' in config:
+                    self.log=config['log']
+                else:
+                    self.log="mywebserv.log"
+
+                if 'errlog' in config:
+                    self.errlog=config['errlog']
+                else:
+                    self.errlog="mywebserv.err"
+
+                if 'allowed_methods' in config:
+                    self.allowed_methods=[]
+                    for method in config['allowed_methods'].split(','):
+                        self.allowed_methods.append(method.rstrip())
+                else:
+                    self.allowed_methods = [ "PUT", "GET", "POST", "DELETE", "CONNECT" ]
+
+                if 'root' in config:
+                    self.root=config['root']
+                else:
+                    self.root="/var/www/html"
         else:
             self.ip=ip
             self.port=port
-            self.log = "/var/log/mywebserv/mywebserv.log"
-            self.errlog = "/var/log/mywebserv/mywebserv.log"
-            self.implemented_methods = [ "PUT", "GET", "POST", "DELETE", "CONNECT" ]
+            self.logfile = "mywebserv.log"
+            self.errlogfile = "mywebserv.err"
             self.allowed_methods = [ "PUT", "GET", "POST", "DELETE", "CONNECT" ]
             self.code = []
             self.root = "/var/www/html/"
-            self.slash = "index.html"
-            self.aliases = {"/cgi-bin" : "/var/www/cgi-bin/"}
-            self.cgi = "/cgi-bin"
-            self.cgiaccess = { ".php":"php"}
+
+    def err_log(self, request, return_code):
+        log_file = open(self.logfile, "a+")
+        log_line = request.request_line + " " + str(return_code)
+        if 'User-Agent' in request.headers:
+            log_line += " - " + request.headers['User-Agent']
+        log_file.write(log_line)
+        log_file.close()
+
+    def log(self, request, return_code):
+        log_file = open(self.errlogfile, "a+")
+        log_line = request.request_line + " " + str(return_code)
+        if 'User-Agent' in request.headers:
+            log_line += " - " + request.headers['User-Agent']
+        log_file.write(log_line)
+        log_file.close()
 
     # _resource_path
     #   return the path for the resource requested
@@ -50,6 +109,7 @@ class WebServer(object):
     # Returns
     #   full_path   - the full path that the resource is located at
     def _resource_path(self, resource):
+        full_path = None
         if(resource=="/"):
             full_path = self.root + self.slash
         elif(resource[0] != "/"):
@@ -58,6 +118,9 @@ class WebServer(object):
             for alias in self.aliases:
                 if(resource.startswith(alias)):
                     full_path = self.aliases[alias] + resource[len(alias)+1:]
+                    break
+            if(full_path is None):
+                return self.root + resource
         else:
             full_path = self.root + resource[1:]
         return full_path
@@ -188,16 +251,19 @@ in the server error log.</p>
     def _run_method(self, request):
         # if the request is bad
         if(request.error):
+            self.log(request, 400)
             return self._error_response(400)
         method = request.get_method()
         resource = request.get_resource()
 
         # if the method is not implemeneted
         if(method not in self.implemented_methods):
+            self.log(request, 501)
             return self._error_response(501)
 
         # if the method is not allowed
         elif(method not in self.allowed_methods):
+            self.log(request, 405)
             return self._error_response(405)
 
         # if the method is a GET or POST request
@@ -215,10 +281,13 @@ in the server error log.</p>
                     response+="Content-Length: " + str(len(response_data)) + "\r\n"
                     response+="\r\n"
                     response+=response_data
+                    self.log(request, 200)
                     return response
                 except IOError:
+                    self.log(request, 403)
                     return self._error_response(403)
             else:
+                self.log(request, 404)
                 return self._error_response(404)
 
         # if the method is a PUT request
@@ -226,13 +295,16 @@ in the server error log.</p>
             #201 success 200 modified
             requested_file = self._resource_path(resource)
 
+            return_code = 200
             # if requested file exists
             if(isfile(requested_file) and abspath(requested_file)[:len(self.root)] == self.root):
+                return_code = 200
                 response= "HTTP/1.1 200 OK" + "\r\n"
                 response+="Content-Length: " + str(len(response_data)) + "\r\n"
                 response+="\r\n"
             # if requested file does not exist
             else:
+                return_code = 201
                 response= "HTTP/1.1 201 OK" + "\r\n"
                 response+="Content-Length: " + str(len(response_data)) + "\r\n"
                 response+="\r\n"
@@ -243,11 +315,14 @@ in the server error log.</p>
                     opened_file.write(request.data)
                     opened_file.close()
                 response+=response_data
+                self.log(request, return_code)
                 return response
             except IOError:
+                self.log(request, 403)
                 return self._error_response(403)
 
         # if the method is a DELETE request
+        #TODO returns
         elif(method == "DELETE"):
             #200 completed 204 No Content (enacted but no content returned) 202 accepted but not enact
             requested_file = self._resource_path(resource)
@@ -255,9 +330,12 @@ in the server error log.</p>
             if(isfile(requested_file) and abspath(requested_file)[:len(self.root)] == self.root):
                 try:
                     remove(requested_file)
+                    self.log(request, 200)
                 except IOError:
+                    self.log(request, 403)
                     return self._error_response(403)
             else:
+                self.log(request, 204)
                 return self._error_response(204)
 
         # if the method is a CONNECT request
@@ -305,16 +383,21 @@ in the server error log.</p>
                         #environ["REMOTE_ADDR"] = request.get_method()
                         try:
                             response = subprocess.Popen([shebang_location, cgi_resource], stdout=subprocess.PIPE).communicate()[0]
-                        except:
+                        except Exception as e:
+                            self.err_log(request, 500, e)
                             return self._error_response(500)
                         print("Response:" + response)
+                        self.log(request, 200)
                         return response
                     else:
+                        self.err_log(request, 500, "Shebang file does not exist")
                         return self._error_response(500)
                 else:
+                    self.err_log(request, 500, "Missing Shebang")
                     return self._error_response(500)
 
             else:
+                self.log(request, 404)
                 return self._error_response(404)
 
 
