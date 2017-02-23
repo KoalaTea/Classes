@@ -379,6 +379,11 @@ in the server error log.</p>
                         environ["SERVER_PROTOCOL"] = request.protocol
                         environ["REQUEST_URI"] = request.get_resource()
                         environ["HTTP_CONNECTION"] = request.get_method()
+                        if 'Content-Length' in request.headers:
+                            environ["CONTENT-LENGTH"] = request.headers['Content-Length']
+                        else:
+                            environ["CONTENT-LENGTH"] = ""
+                        environ["QUERY_STRING_POST"] = request.data
                         #environ["SERVER_PORT"] =
                         #environ["REMOTE_ADDR"] = request.get_method()
                         try:
@@ -388,7 +393,11 @@ in the server error log.</p>
                             return self._error_response(500)
                         print("Response:" + response)
                         self.log(request, 200)
-                        return response
+                        real_response = "HTTP/1.1 200 OK" + "\r\n"
+                        real_response+="Content-Length: " + str(len(response)) + "\r\n"
+                        real_response+="\r\n"
+                        real_response+=response
+                        return real_response
                     else:
                         self.err_log(request, 500, "Shebang file does not exist")
                         return self._error_response(500)
@@ -426,31 +435,32 @@ in the server error log.</p>
             if not data:
                 break
 
-        request = Request(full_data)
-        if("Content-Length" in request.headers):
-            current_data_len = len(request.data)
-            print(current_data_len)
-            content_len = int(request.headers["Content-Length"])
-            print(content_len)
-            if(current_data_len < content_len):
-                data = client_socket.recv(content_len - current_data_len)
-                request.data += data
-                request.raw += data
+        if full_data != '':
+            request = Request(full_data)
+            if("Content-Length" in request.headers):
+                current_data_len = len(request.data)
+                print(current_data_len)
+                content_len = int(request.headers["Content-Length"])
+                print(content_len)
+                if(current_data_len < content_len):
+                    data = client_socket.recv(content_len - current_data_len)
+                    request.data += data
+                    request.raw += data
 
         #full_data = client_socket.recv(1024)
 
         #temp testing stuff
-        print(repr(request.raw))
-        print(request.raw)
-        print(request.headers)
-        method = request.get_method()
-        resource = request.get_resource()
+            print(repr(request.raw))
+            print(request.raw)
+            print(request.headers)
+            method = request.get_method()
+            resource = request.get_resource()
 
-        response = self._response(request, request.data)
-        print(response)
-        client_socket.send(response)
+            response = self._response(request, request.data)
+            print(response)
+            client_socket.send(response)
 
-        client_socket.close()
+            client_socket.close()
 
     # serve_web
     #   starts the webserver and handles connections sending them to _handle_client
@@ -467,9 +477,9 @@ in the server error log.</p>
             server_socket.listen(10)
             while 1:
                 (client_socket, address) = server_socket.accept()
-                self._handle_client(client_socket)
+                #self._handle_client(client_socket)
                 # Threading did not work when I last tried. I will come back to this
-                #threading.Thread(target=self._handle_client, args=(client_socket,))
+                threading.Thread(target=self._handle_client, args=(client_socket,)).start()
         except KeyboardInterrupt:
             print("Killing server due to SIGINT")
             server_socket.close()

@@ -10,8 +10,11 @@ class Request(object):
             split_header = header.split(":")
             client_headers[split_header[0]] = ':'.join(split_header[1:])
         self.headers = client_headers
+        print("CLIENT DATA" + client_data)
+        print(split_headers)
         self.request_line = split_headers[0]
         self.raw = client_data
+        print(self.request_line.split())
         self.protocol = self.request_line.split()[-1]
         self.error = False
         if(self.protocol not in ("HTTP/1.0", "HTTP/1.1")):
