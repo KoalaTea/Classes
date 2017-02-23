@@ -1,5 +1,3 @@
-#!/usr/bin/php
-
 <?php
 	header('Content-type: text/html');
 ?>
@@ -11,22 +9,22 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
  
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.  css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link href="https://fonts.googleapis.com/css?family=Raleway+Dots" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base.css') }}">
+        <link rel="stylesheet" type="text/css" href="/static/css/base.css">
 
     </head>
-    <body style="font-family: 'Lucida Sans Typewriter', 'Lucida Console', Monaco, 'Bitstream Vera Sans   Mono', monospace;">
+    <body style="font-family: 'Lucida Sans Typewriter', 'Lucida Console', Monaco, 'Bitstream Vera Sans Mono', monospace;">
 
-    <body style="font-family: 'Lucida Sans Typewriter', 'Lucida Console', Monaco, 'Bitstream Vera Sans   Mono', monospace;">
+    <body style="font-family: 'Lucida Sans Typewriter', 'Lucida Console', Monaco, 'Bitstream Vera Sans Mono', monospace;">
  
       <div class="jumbotron">
         <div class="container text-center">
           <h1>
             Hacker Bar
-            <img src="{{ url_for('static', filename='images/TiltedM.png') }}" style="width:6%;heigth:6%; ">
+            <img src="/static/images/TiltedM.png" style="width:6%;heigth:6%; ">
           </h1>
         </div>
       </div>
@@ -52,43 +50,53 @@
            </div>
  
            <ul class="nav navbar-nav navbar-right mobile-bar">
-            //{% if current_user.is_authenticated %}
-              <li>
-               <a href="/">
+             <li>
+               <a href="/cgi-bin/index.php">
                  <span class="menu-icon  glyphicon glyphicon-home"></span>
                  Home
                </a>
              </li>
              <li>
-               <a href="/menu">
+               <a href="/cgi-bin/menu.php">
                  <span class="menu-icon glyphicon glyphicon-glass"></span>
                   Menu
                </a>
              </li>
              <li>
-               <a href="/recent_orders">
+               <a href="/cgi-bin/recent_orders.php">
                  <span class="menu-icon glyphicon glyphicon-shopping-cart"></span>
                  Orders
-               </a>
-             </li>
-           </ul>
-         </div>
-       </nav>
-       //{% else %}
-             <li>
-               <a href="/login">
-                 <span class="menu-icon  glyphicon glyphicon-home"></span>
+	       </a>
+	     </li>
+               <?php
+	                session_start();
+        	        if(!(isset($_SESSION['login']) && $_SESSION['login'] != '')){
+            
+                //{% if current_user.is_unauthenticated %}
+                ?>  
+	     <li>
+               <a href="/cgi-bin/login.php">
+                 <span class="menu-icon glyphicon glyphicon-home"></span>
                  Sign In
+	      </a>
+            </li>
+           </ul>
+         </div>
+        </nav>
+            <?php
+		}else{
+	    //else
+            ?>
+             <li>
+               <a href="/cgi-bin/logout">
+                 <span class="menu-icon glyphicon glyphicon-home"></span>
+                 Sign Out
                </a>
              </li>
            </ul>
          </div>
-       </nav>
-       //{% endif %}
-        <p> 
-        <?php $browser = getenv('HTTP_USER_AGENT'); echo "The users browser is $browser\n"; 
-        $vars = get_defined_vars(); echo "The vars are $vars\n";
-        echo '<pre>'; print_r($vars); echo '</pre>'; ?>
-        </p>
-    </body> 
-</html>
+        </nav>
+            <?php
+		}
+	    //endif	
+            ?>
