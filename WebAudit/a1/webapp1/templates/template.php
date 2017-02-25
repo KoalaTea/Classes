@@ -1,5 +1,6 @@
 <?php
-	header('Content-type: text/html');
+    header('Content-type: text/html');
+    session_start();
 ?>
 
 <html>
@@ -68,9 +69,8 @@
                  Orders
 	       </a>
 	     </li>
-               <?php
-	                session_start();
-        	        if(!(isset($_SESSION['login']) && $_SESSION['login'] != '')){
+                <?php
+                    if(!(!is_null($_SESSION['username']) && $_SESSION['username'] != '')){
             
                 //{% if current_user.is_unauthenticated %}
                 ?>  
@@ -88,7 +88,7 @@
 	    //else
             ?>
              <li>
-               <a href="/cgi-bin/logout">
+               <a href="/cgi-bin/logout.php">
                  <span class="menu-icon glyphicon glyphicon-home"></span>
                  Sign Out
                </a>

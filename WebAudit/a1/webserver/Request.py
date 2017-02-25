@@ -10,9 +10,8 @@ class Request(object):
             split_header = header.split(":")
             client_headers[split_header[0]] = ':'.join(split_header[1:])
         self.headers = client_headers
-        print("CLIENT DATA" + client_data)
-        print(split_headers)
         self.request_line = split_headers[0]
+        self.rest, _, self.query=self.request_line.split()[1].partition("?")
         self.raw = client_data
         print(self.request_line.split())
         self.protocol = self.request_line.split()[-1]
@@ -32,8 +31,7 @@ class Request(object):
         return request_list[0]
 
     def get_resource(self):
-        request_list = self.request_line.split()
-        return request_list[1]
+        return self.rest
 
 
 

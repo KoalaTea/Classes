@@ -1,67 +1,74 @@
-#!/usr/bin/php
+#!/usr/bin/php-cgi
 
 <?php
-    session_start();
     include("templates/template.php");
 ?>
 <?php
+    //function login(){
+    echo var_dump($_SESSION);
+    if(is_null($_SESSION['username'])){ echo "HI"; }else{ echo "NO"; }
+    if((!is_null($_SESSION['username']) && $_SESSION['username'] != '')){
+?>
+    <script type="text/javascript">
+    <!--
+    //indow.location = "index.php"
+    -->
+    </script>
+    You're already logged in, redirecting you.
+<?php
+    }else{
+        if(isset($_GET['Submit'])){
+            try {
+                // open connection to MongoDB server
+                $conn = new MongoDB\Driver\Manager("mongodb://localhost:27017");
+                
+                // access database
+                //$db = $conn->ChambordPi;
 
-$_SESSION["username"] = $username;
+                // access collection
+                //$collection = $db->Users;
 
+                $userName = $_GET['username'];
+                $userPass = $_GET['password'];
 
-    try {
-        // open connection to MongoDB server
-        $conn = new Mongo('localhost');
+                $filter = [ "username" => $userName ];
+                $query = new MongoDB\Driver\Query($filter);
+                $user = $conn->executeQuery('ChambordPi.Users', $query);
 
-        // access database
-        $db = $conn->ChambordPi;
+                //$user = $collection->findOne(array('username'=> userName));
+                if(is_null($user)){
+                    echo 'username incorrect';
+                }else{
+                    foreach ($user as $obj) {
+                        if($userName == $obj->username && crypt($userPass, $obj->password) == $obj->password){
+                            $_SESSION['username'] = $userName;
+                        }
+                        else{
+                            $_SESSION['username'] = '';
+                        }
 
-        // access collection
-        $collection = $db->Users;
-
-
-        $userName = $_POST['username'];
-        $userPass = $_POST['password'];
-
-
-        $user = $db->$collection->findOne(array('username'=> userName));
-
-        if(is_null($user)){
-            echo 'username incorrect';
-        }else{
-            foreach ($user as $obj) {
-                echo 'Username' . $obj['username'];
-                echo 'password: ' . $obj['password'];
-                if($userName == 'user1' && crypt($userPass, $obj['password']) == $obj['password']){
-                    echo 'found';            
+                    }
                 }
-                else{
-                    echo 'not found';            
-                }
+                // disconnect from server
+                //$conn->close();
 
+            } catch (MongoConnectionException $e) {
+                die('Error connecting to MongoDB server');
+            } catch (MongoException $e) {
+                die('Error: ' . $e->getMessage());
             }
         }
-        // disconnect from server
-        $conn->close();
-
-    } catch (MongoConnectionException $e) {
-        die('Error connecting to MongoDB server');
-    } catch (MongoException $e) {
-        die('Error: ' . $e->getMessage());
     }
-
-$_SESSION["username"] = $correct;
-
+//}
 ?>
 
   <link rel="stylesheet" type="text/css" href="/static/css/login.css">
 
   <div class = "container">
     <div class="wrapper">
-      <form action="" method="post" name="login" class="form-signin">
+      <form action="" method="get" name="/cgi-bin/login.php" class="form-signin">
         <h3 class="form-signin-heading">Welcome... Please Authenticate</br>---------------</h3>
         <br>
-        {{ form.hidden_tag() }}
         <input type="text" class="form-control" name="username" placeholder="Username" required="" />
         <input type="password" class="form-control" name="password" placeholder="Password" required=""/>
 

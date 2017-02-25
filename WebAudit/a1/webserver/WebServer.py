@@ -84,7 +84,8 @@ class WebServer(object):
             self.code = []
             self.root = "/var/www/html/"
 
-    def err_log(self, request, return_code):
+    def err_log(self, request, return_code, e):
+        print(e)
         log_file = open(self.logfile, "a+")
         log_line = request.request_line + " " + str(return_code)
         if 'User-Agent' in request.headers:
@@ -379,25 +380,52 @@ in the server error log.</p>
                         environ["SERVER_PROTOCOL"] = request.protocol
                         environ["REQUEST_URI"] = request.get_resource()
                         environ["HTTP_CONNECTION"] = request.get_method()
+                        environ["SCRIPT_FILENAME"] = cgi_resource
+                        if "Cookie" in request.headers:
+                            environ["HTTP_COOKIE"] = request.headers["Cookie"]
                         if 'Content-Length' in request.headers:
-                            environ["CONTENT-LENGTH"] = request.headers['Content-Length']
+                            print(request.headers['Content-Length'].strip())
+                            environ["CONTENT_LENGTH"] = request.headers['Content-Length'].strip()
                         else:
-                            environ["CONTENT-LENGTH"] = ""
-                        environ["QUERY_STRING_POST"] = request.data
+                            environ["CONTENT_LENGTH"] = ""
+                        #environ["QUERY_STRING"] = request.data
                         #environ["SERVER_PORT"] =
                         #environ["REMOTE_ADDR"] = request.get_method()
+                        if(request.query):
+                            environ["QUERY_STRING"] = request.query
+                        else:
+                            environ["QUERY_STRING"] = ""
                         try:
-                            response = subprocess.Popen([shebang_location, cgi_resource], stdout=subprocess.PIPE).communicate()[0]
+                            #WHY DOES THIS NOT WORK!!! It like really should
+                            print(cgi_resource)
+                            if(request.get_method() == "POST"):
+                                print(request.data)
+                                p = subprocess.Popen(shebang_location,
+                                                    stdin=subprocess.PIPE,
+                                                    stdout=subprocess.PIPE,
+                                                    stderr=subprocess.PIPE,
+                                                    env=environ
+                                                    )
+                                stdout, stderr = p.communicate(request.data)
+                                if stderr:
+                                    self.err_log(request, 500, stderr)
+                                p.stderr.close()
+                                p.stdout.close()
+                                response = stdout
+                            else:
+                                response = subprocess.Popen(shebang_location, stdout=subprocess.PIPE).communicate()[0]
                         except Exception as e:
                             self.err_log(request, 500, e)
                             return self._error_response(500)
                         print("Response:" + response)
                         self.log(request, 200)
                         real_response = "HTTP/1.1 200 OK" + "\r\n"
-                        real_response+="Content-Length: " + str(len(response)) + "\r\n"
-                        real_response+="\r\n"
                         real_response+=response
+                        print("MY REAL: " + real_response)
                         return real_response
+
+                            #TODO split query line if it exist and set variables
+                            #/usr/lib64/python2.7/CGIHTTPServer.py
                     else:
                         self.err_log(request, 500, "Shebang file does not exist")
                         return self._error_response(500)

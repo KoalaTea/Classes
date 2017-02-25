@@ -1,2 +1,4 @@
 *.pyc
 */__pycache__/
+*/mywebserv.err
+*/mywebserv.log
