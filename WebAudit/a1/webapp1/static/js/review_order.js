@@ -1,7 +1,7 @@
 function orderDrink(drinkname) {
   var inst = document.getElementById("instructOrder").value;
-  $.post({
-    url: "/order_drink",
+  $.get({
+    url: "/order_drink.php",
     data: {
       drink: drinkname,
       instructions: inst

@@ -14,8 +14,8 @@ function addIngredient(cost) {
 
 function orderCustom() {
   var inst = document.getElementById("instructOrder").value;
-  $.post({
-    url: "/order_custom_drink",
+  $.get({
+    url: "/order_custom_drink.php",
     data: {
       recipe: ingred,
       instructions: inst

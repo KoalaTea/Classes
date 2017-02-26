@@ -1,14 +1,14 @@
 function selectDrink(drinkname) {
-  window.location = "review_order/"+drinkname;
+  window.location = "review_order.php/?drinkname="+drinkname;
 }
 
 function customDrink() {
-  window.location = "custom_drink";
+  window.location = "custom_drink.php";
 }
 
 function cancelDrink(orderid) {
-  $.post({
-    url: "/cancel_drink",
+  $.get({
+    url: "/cancel_drink.php",
     data: {
       order: orderid,
     }

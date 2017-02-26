@@ -6,8 +6,7 @@
     <script type="text/javascript" src="/static/js/menu.js"></script>
 
 <?php
-//TODO noworky
-if((!is_null($_SESSION['username']) && $_SESSION['username'] != '' && (in_array('bartender', $_SESSION['roles']) || in_array('admin', $_SESSION['roles'])))){
+    if((!is_null($_SESSION['username']) && $_SESSION['username'] != '' && (in_array('bartender', $_SESSION['roles']) || in_array('admin', $_SESSION['roles'])))){
 ?>
 <div class="container" style="margin-top:5px">
   <div class="row">
@@ -40,23 +39,22 @@ if((!is_null($_SESSION['username']) && $_SESSION['username'] != '' && (in_array(
                        echo "FICL";
 
 ?>
-              {% if orders.length != 0 %}
-              {% for order in orders %}
               <div class="tr">
                   <div class="td">
                     <div class="col col-xs-12" align=center>
-                        {% if order['status']|lower == "queued" %}
                         <div class="col col-xs-4" align=left>
                           <h5 class="drink-title"><b>{{order['name']}}</b></h5>
                           <ul>
-                            {% for ingredient in order['recipe'] %}
-                              <li class="drink-text">{{ingredient['amount']}}
-                                  {% if ingredient['flavor']|lower != "none" %}
-                                    {{ingredient['flavor']}}
-                                  {% endif %}
-                                  {{ingredient['type']}}
+<?php
+                            foreach( $order->recipe as $ingredient ){
+                                echo '<li class="drink-text">' . $ingredient->amount;
+                                if(!is_null($ingredient->flavor)){
+                                    echo ' ' . $ingredient->flavor;
+                                }
+                                echo ' ' . $ingredient->type;
+?>
                               </li>
-                            {% endfor %}
+<?php } //end ingredient for loop ?>
                           </ul>
                           <form action="update_order" method="post" name="update_order" class="form-drinkupdate">
                             <input type="hidden" name="id" value= {{ order['_id'] }}>
@@ -77,7 +75,9 @@ if((!is_null($_SESSION['username']) && $_SESSION['username'] != '' && (in_array(
                           </div>
                           <br>
                           <p>Notes: </p>
-                          <label class="drink-text">{{order['instructions']}}</label>
+<?php
+                                echo '<label class="drink-text">' . $order->instructions . '</label>';
+?>
                         </div>
                     </div>
                   </div>
