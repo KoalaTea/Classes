@@ -1,0 +1,4 @@
+php-devel
+php-pear
+openssl-devel
+pecl install mongodb

@@ -6,7 +6,6 @@
 <?php
     //function login(){
     echo var_dump($_SESSION);
-    if(is_null($_SESSION['username'])){ echo "HI"; }else{ echo "NO"; }
     if((!is_null($_SESSION['username']) && $_SESSION['username'] != '')){
 ?>
     <script type="text/javascript">
@@ -42,6 +41,8 @@
                     foreach ($user as $obj) {
                         if($userName == $obj->username && crypt($userPass, $obj->password) == $obj->password){
                             $_SESSION['username'] = $userName;
+                            $_SESSION['roles'] = $obj->roles;
+                            var_dump($_SESSION['roles']);
                         }
                         else{
                             $_SESSION['username'] = '';
