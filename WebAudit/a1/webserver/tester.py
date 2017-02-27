@@ -20,14 +20,19 @@ def usesocket():
     # normal req
     #s.send("GET / HTTP/1.0\r\n\r\n")
     # cgi req
-    s.send("GET /cgi-bin/index.php HTTP/1.0\r\n\r\n")
+    #s.send("GET /cgi-bin/index.php HTTP/1.0\r\n\r\n")
     #s.close()
+    #connect request
+    s.send("CONNECT www.cnn.com:80 HTTP/1.1\r\nHost: www.cnn.com:80\r\n\r\n")
+    s.recv(1024)
+    s.send("GET / HTTP/1.1\r\nHost: www.cnn.com\r\n\r\n")
 
 
     full_data = ''
     while True:
         data = s.recv(1024)
         full_data+=data
+        print(full_data)
         if not data:
             break
 

@@ -358,9 +358,9 @@ in the server error log.</p>
                 self.log(request, 204)
                 return self._error_response(204)
 
-        # if the method is a CONNECT request
-        elif(method == "CONNECT"):
-            pass
+
+
+
 
     # _run_cgi
     #   Run cgi to get responses
@@ -497,15 +497,85 @@ in the server error log.</p>
         #full_data = client_socket.recv(1024)
 
         #temp testing stuff
-            print(repr(request.raw))
-            print(request.raw)
-            print(request.headers)
             method = request.get_method()
-            resource = request.get_resource()
+            # if the method is a CONNECT request
+            if(method == "CONNECT"):
+                #create the socker
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                #check if there is a port attached to our 'resource'
+                #for both try to create a ocket if it fails send an error and return
+                host = request.get_resource().split(':')
+                if(len(host) == 1):
+                    try:
+                        s.connect((host[0], 80))
+                    except:
+                        client_socket.send(self._error_response(500))
+                        client_socket.close()
+                        return
+                else:
+                    try:
+                        s.connect((host[0], int(host[1])))
+                    except:
+                        client_socket.send(self._error_response(500))
+                        client_socket.close()
+                        return
 
-            response = self._response(request, request.data)
-            print(response)
-            client_socket.send(response)
+                #if we did not hit an except we send out ok response
+                client_socket.send("HTTP/1.1 200 OK\r\n")
+
+                #now we read data until one of the two connections breaks
+                while True:
+                    #CLIENT SOCKET
+                    #constantly reset full_data since that is our output
+                    full_data = ''
+                    #while we don't hit the end of a request keep reading and forwarding the
+                    # data from the client
+                    while "\r\n\r\n" not in full_data:
+                        data = client_socket.recv(1024)
+                        s.send(data)
+                        full_data = full_data + data
+                        #if the socket dies break
+                        if not data:
+                            break
+                    #if the client socket died, we will break
+                    print("Client sent\n" + full_data)
+                    if not data:
+                        print("Client broke on us")
+                        break
+                    #if we did not break due to a socket death there may be more data
+                    #from the client (like POST with a lot of data!)
+                    if full_data != '':
+                        request = Request(full_data)
+                        if("Content-Length" in request.headers):
+                            current_data_len = len(request.data)
+                            print(current_data_len)
+                            content_len = int(request.headers["Content-Length"])
+                            print(content_len)
+                            if(current_data_len < content_len):
+                                data = client_socket.recv(content_len - current_data_len)
+                                s.send(data)
+                                full_data += data
+
+                    #SERVER SOCKET
+                    #if the client socket completed it's output then we will
+                    #wait for the server to respond (problem with our \r\n\r\n
+                    #is it is not correct now)
+                    full_data = ''
+                    while "\r\n\r\n" not in full_data:
+                        data = s.recv(1024)
+                        full_data = full_data + data
+                        if not data:
+                            break
+                    print("The sever gave us\n" + full_data)
+                    client_socket.send(full_data)
+                    if not data:
+                        ("The sever broke on us")
+                        break
+                s.close()
+            else:
+                response = self._response(request, request.data)
+                print(response)
+                client_socket.send(response)
 
             client_socket.close()
 
