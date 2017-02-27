@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script type="text/javascript" src="/static/js/orders.js"></script>
+{% endblock %}
+
+{% block content %}  
+    <h1>Hello, {{ user.username }}</h1>
+    <div class="terminal">
+        <p>[{{ user.username }}@Hackerbar orders]$ ls -l</p>
+    </div>
+    <div id="output"></div>
+    <script>reload_orders();</script>
+{% endblock %}

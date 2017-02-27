@@ -1,0 +1,13 @@
+{% for order in orders %}
+    <div class="orders">
+        <p>{{ order.drink.name }}, {{ order.drink.type }}</p>
+        {% for ingredient in order.drink.recipe %}
+        <p><b>
+            {% if ingredient.flavor is not none %}
+                {{ ingredient.flavor }}
+            {% endif %}
+            {{ ingredient.type }} - {{ ingredient.ammount }}
+        </b></p>
+        {% endfor %}
+    </div>
+{% endfor %}

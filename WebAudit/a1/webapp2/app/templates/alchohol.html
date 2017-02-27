@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+    <p>all alchohols on hand</p>
+    {% for alchohol in alchohol_list %}
+        <div><p>{{ alchohol.name }},
+            {% if alchohol.flavor is not none %}
+                {{ alchohol.flavor }}
+            {% endif %}
+            {{ alchohol.type }} 
+        </p></div>
+    {% endfor %}
+{% endblock %}

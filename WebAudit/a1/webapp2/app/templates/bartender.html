@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/orders.css') }}">
+    <script type="text/javascript" src="/static/js/menu.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top:5px">
+  <div class="row">
+    <div class="col">
+      <div class="panel panel-default panel-table">
+          <div class="panel-heading">
+              <div class="tr">
+                  <div class="td">
+                    <h5 class="drink-title">
+                      [<b class="user-name">{{ user.username }}</b>@<b class="hacker-bar">Hackerbar
+                      </b>
+                      <b class="dir">~/menu/</b>]$ cat orders | less
+                    </h5>
+                  </div>
+              </div>
+          </div>
+          <div class="panel-body">
+              {% if orders.length != 0 %}
+              {% for order in orders %}
+              <div class="tr">
+                  <div class="td">
+                    <div class="col col-xs-12" align=center>
+                        {% if order['status']|lower == "queued" %}
+                        <div class="col col-xs-4" align=left>
+                          <h5 class="drink-title"><b>{{order['name']}}</b></h5>
+                          <ul>
+                            {% for ingredient in order['recipe'] %}
+                              <li class="drink-text">{{ingredient['amount']}}
+                                  {% if ingredient['flavor']|lower != "none" %}
+                                    {{ingredient['flavor']}}
+                                  {% endif %}
+                                  {{ingredient['type']}}
+                              </li>
+                            {% endfor %}
+                          </ul>
+                          <form action="update_order" method="post" name="update_order" class="form-drinkupdate">
+                            <input type="hidden" name="id" value= {{ order['_id'] }}>
+                            <input type="hidden" name="status" value= {{ order['status'] }}>
+                            <button id="stepBtn" class="btn btn-primary btn-hover-green" type="submit">Mixing</button>
+                          </form>
+                        </div>
+                        <div class="col col-xs-8">
+                          <div class="row">
+                          </div>
+                          <br>
+                          <p>Notes: </p>
+                          <label class="drink-text">{{order['instructions']}}</label>
+                        </div>
+
+                        {% elif order['status']|lower == "inprogress" %}
+                        <div class="col col-xs-4" align=left>
+                          <h5 class="drink-title"><b>{{order['name']}}</b></h5>
+                          <ul>
+                            {% for ingredient in order['recipe'] %}
+                              <li class="drink-text">{{ingredient['amount']}}
+                                  {% if ingredient['flavor']|lower != "none" %}
+                                    {{ingredient['flavor']}}
+                                  {% endif %}
+                                  {{ingredient['type']}}
+                              </li>
+                            {% endfor %}
+                          </ul>
+                          <form action="update_order" method="post" name="update_order" class="form-drinkupdate">
+                            <input type="hidden" name="id" value= {{ order['_id'] }}>
+                            <input type="hidden" name="status" value= {{ order['status'] }}>
+                            <button id="stepBtn" class="btn btn-success btn-hover-green" type="submit">Ready</button>
+                          </form>
+
+                        </div>
+                        <div class="col col-xs-8">
+                          <div class="row">
+                          </div>
+                          <br>
+                          <p>Notes: <p>
+                          <label class="drink-text">{{order['instructions']}}</label>
+                        </div>
+
+                        {% elif order['status']|lower == "ready" %}
+                        <div class="col col-xs-4" align=left>
+                          <h5 class="drink-title"><b>{{order['name']}}</b></h5>
+                          <ul>
+                            {% for ingredient in order['recipe'] %}
+                              <li class="drink-text">{{ingredient['amount']}}
+                                  {% if ingredient['flavor']|lower != "none" %}
+                                    {{ingredient['flavor']}}
+                                  {% endif %}
+                                  {{ingredient['type']}}
+                              </li>
+                            {% endfor %}
+                          </ul>
+                          <form action="update_order" method="post" name="update_order" class="form-drinkupdate">
+                            <input type="hidden" name="id" value= {{ order['_id'] }}>
+                            <input type="hidden" name="status" value= {{ order['status'] }}>
+                            <button id="stepBtn" class="btn btn-danger btn-hover-green" type="submit">Picked Up</button>
+                          </form>
+
+                        </div>
+                        <div class="col col-xs-8">
+                          <div class="row">
+                          </div>
+                          <br>
+                          <p>Notes: <p>
+                          <label class="drink-text">{{order['instructions']}}</label>
+                        </div>
+                        {% endif %}
+
+                    </div>
+                  </div>
+              </div>
+              {% endfor %}
+              {% else %}
+              <h1> No Orders... </h1>
+              {% endif %}
+          </div>
+          <div class="panel-footer">
+              <div class="tr" align=center>
+                  <div class="td">
+                  <h5 class="drink-title">(END)</h5>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

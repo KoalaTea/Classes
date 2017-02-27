@@ -9,7 +9,6 @@ from os.path import isfile, abspath
 from Request import Request
 import threading
 import subprocess
-#import subprocess #php?
 
 # WebServer Class to deal with all web things
 class WebServer(object):
@@ -35,13 +34,22 @@ class WebServer(object):
         if(config_file):
             if(isfile(config_file)):
                 config = {}
-                lines = [line.rstrip('\n') for line in open('filename')]
+                lines = [line.rstrip('\n') for line in open(config_file)]
                 for line in lines:
-                    if line.startswitch('#'):
+                    if line.startswith('#'):
                         pass
                     else:
                         config_line = line.split(':')
-                        config[config_line[0]] = config_line[1].rstrip()
+                        if(config_line[0]=='ScriptAlias'):
+                            thealias = config_line[1].split(",")
+                            if(len(thealias) < 2):
+                                self.err_log(None, 0, "Bad Alias line look at example")
+                            else:
+                                if('aliases' not in config):
+                                    config['aliases'] = {}
+                                config['aliases'][thealias[0]] = thealias[1]
+                        else:
+                            config[config_line[0]] = config_line[1].rstrip()
                 print(config)
 
                 if 'ip' in config:
@@ -55,14 +63,14 @@ class WebServer(object):
                     self.port=port
 
                 if 'log' in config:
-                    self.log=config['log']
+                    self.logfile=config['log']
                 else:
-                    self.log="mywebserv.log"
+                    self.logfile="mywebserv.log"
 
                 if 'errlog' in config:
-                    self.errlog=config['errlog']
+                    self.errlogfile=config['errlog']
                 else:
-                    self.errlog="mywebserv.err"
+                    self.errlogfile="mywebserv.err"
 
                 if 'allowed_methods' in config:
                     self.allowed_methods=[]
@@ -75,6 +83,13 @@ class WebServer(object):
                     self.root=config['root']
                 else:
                     self.root="/var/www/html"
+
+                if 'aliases' in config:
+                    self.aliases=config['aliases']
+
+                if 'cgi' in config:
+                    self.cgi=config['cgi']
+
         else:
             self.ip=ip
             self.port=port
@@ -85,20 +100,24 @@ class WebServer(object):
             self.root = "/var/www/html/"
 
     def err_log(self, request, return_code, e):
-        print(e)
+        if(request is None):
+            log_file = open(self.errlogfile, "a+")
+            log_line = "web server error: " + e
+        else:
+            print(e)
+            log_file = open(self.errlogfile, "a+")
+            log_line = request.request_line + " " + str(return_code)
+            if 'User-Agent' in request.headers:
+                log_line += " - " + request.headers['User-Agent']
+        log_file.write(log_line + "\n")
+        log_file.close()
+
+    def log(self, request, return_code):
         log_file = open(self.logfile, "a+")
         log_line = request.request_line + " " + str(return_code)
         if 'User-Agent' in request.headers:
             log_line += " - " + request.headers['User-Agent']
-        log_file.write(log_line)
-        log_file.close()
-
-    def log(self, request, return_code):
-        log_file = open(self.errlogfile, "a+")
-        log_line = request.request_line + " " + str(return_code)
-        if 'User-Agent' in request.headers:
-            log_line += " - " + request.headers['User-Agent']
-        log_file.write(log_line)
+        log_file.write(log_line + "\n")
         log_file.close()
 
     # _resource_path

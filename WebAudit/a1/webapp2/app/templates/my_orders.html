@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script type="text/javascript" src="/static/js/my_orders.js"></script>
+{% endblock %}
+
+{% block content %}  
+    <h1>Hello, {{ user.username }}</h1>
+    <div class="terminal">
+        <p>[{{ user.username }}@Hackerbar orders]$ ls -l</p>
+    </div>
+    <div id="output"></div>
+    <script>get_orders();</script>
+{% endblock %}

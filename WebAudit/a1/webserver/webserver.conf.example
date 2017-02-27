@@ -1,0 +1,16 @@
+#ip to bind to
+ip:0.0.0.0
+#the port to use
+port:8008
+#log file to write to
+log:mylog.log
+#err log to write to
+errlog:myerr.err
+#the allowed methods in a , seperated list
+allowed_methods:GET,POST
+#root directory
+root:/var/www/html
+#the folder that will run cgi (from the root)
+cgi:/cgi-bin
+#aliases
+ScriptAlias:/cgi-bin,/var/www/cgi-bin/

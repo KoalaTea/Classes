@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    <p>all drinks</p>
+    {% for drink in drinks %}
+        <div class="drinks">{{ drink.name }}<br>{{ drink.type }}</p>
+            {% for ingredient in drink.recipe %}
+            <p><b>
+                {% if ingredient.flavor is not none %}
+                    {{ ingredient.flavor }}
+                {% endif %}
+                {{ ingredient.type }} - {{ ingredient.ammount }}
+            </p></b>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock %}
