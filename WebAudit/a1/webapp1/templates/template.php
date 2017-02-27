@@ -63,12 +63,6 @@
                   Menu
                </a>
              </li>
-             <li>
-               <a href="/cgi-bin/recent_orders.php">
-                 <span class="menu-icon glyphicon glyphicon-shopping-cart"></span>
-                 Orders
-	       </a>
-	     </li>
                 <?php
                     if(!(!is_null($_SESSION['username']) && $_SESSION['username'] != '')){
             
@@ -83,10 +77,25 @@
            </ul>
          </div>
         </nav>
-            <?php
-		}else{
-	    //else
-            ?>
+<?php
+                    }else{ //else
+?>
+             <li>
+               <a href="/cgi-bin/recent_orders.php">
+                 <span class="menu-icon glyphicon glyphicon-shopping-cart"></span>
+                 Orders
+	           </a>
+	         </li>
+<?php
+            if(in_array('bartender', $_SESSION['roles']) || in_array('admin', $_SESSION['roles'])){
+?>
+             <li>
+               <a href="/cgi-bin/bartender.php">
+                 <span class="menu-icon glyphicon glyphicon-home"></span>
+                 Bartender
+               </a>
+             </li>
+<?php	    } ?>
              <li>
                <a href="/cgi-bin/logout.php">
                  <span class="menu-icon glyphicon glyphicon-home"></span>

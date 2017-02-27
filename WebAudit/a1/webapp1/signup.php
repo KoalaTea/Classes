@@ -16,16 +16,14 @@ function generateHash($password) {
     }
 }
 
-echo generateHash('temporary2017koalatea');
-
 $bulk = new MongoDB\Driver\BulkWrite;
 $user1 = [ 'username' => 'koalatea2', 'password'=>generateHash('temporary2017koalatea'), 'credits'=> 100000, 'roles'=>Array( 'user', 'admin', 'bartender'), 'drinksOrdered' => 0 ];
 $user2 = [ 'username' => 'user', 'password'=>generateHash('user'), 'credits'=> 1000, 'roles'=>Array( 'user' ), 'drinksOrdered' => 0 ];
+$user1 = [ 'username' => 'bartender', 'password'=>generateHash('bartender'), 'credits'=> 100000, 'roles'=>Array( 'user', 'bartender'), 'drinksOrdered' => 0 ];
+
 
 $bulk->insert($user1);
 $bulk->insert($user2);
 
 $result = $conn->executeBulkWrite('ChambordPi.Users', $bulk);
-
-echo "TEST!";
 ?>

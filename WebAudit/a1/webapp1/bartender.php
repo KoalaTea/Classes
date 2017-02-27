@@ -36,14 +36,16 @@
                if($orders->toArray()){
                    $orders = $conn->executeQuery('ChambordPi.Orders', $query);
                    foreach ( $orders as $order ){
-                       echo "FICL";
 
 ?>
               <div class="tr">
                   <div class="td">
                     <div class="col col-xs-12" align=center>
                         <div class="col col-xs-4" align=left>
-                          <h5 class="drink-title"><b>{{order['name']}}</b></h5>
+<?php
+                            echo '<h5 class="drink-title"><b>' . $order->name . '</b></h5>';
+                            echo '<img height="100%" width="100%" src="/static/images/drinks/' . $order->image . '">';
+?>
                           <ul>
 <?php
                             foreach( $order->recipe as $ingredient ){
@@ -56,10 +58,10 @@
                               </li>
 <?php } //end ingredient for loop ?>
                           </ul>
-                          <form action="update_order" method="post" name="update_order" class="form-drinkupdate">
-                            <input type="hidden" name="id" value= {{ order['_id'] }}>
-                            <input type="hidden" name="status" value= {{ order['status'] }}>
+                          <form action="update_order.php" method="get" name="update_order.php" class="form-drinkupdate">
 <?php
+                            echo '<input type="hidden" name="id" value="' . $order->_id . '">';
+                            echo '<input type="hidden" name="status" value="' . $order->status . '">';
                             if(strtolower($order->status)=="queued"){
                                 echo '<button id="stepBtn" class="btn btn-primary btn-hover-green" type="submit">Mixing</button>';
                             }elseif(strtolower($order->status)=="inprogress"){

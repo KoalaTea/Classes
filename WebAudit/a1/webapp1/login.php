@@ -5,12 +5,11 @@
 ?>
 <?php
     //function login(){
-    echo var_dump($_SESSION);
     if((!is_null($_SESSION['username']) && $_SESSION['username'] != '')){
 ?>
     <script type="text/javascript">
     <!--
-    //indow.location = "index.php"
+    window.location = "index.php"
     -->
     </script>
     You're already logged in, redirecting you.
@@ -42,7 +41,6 @@
                         if($userName == $obj->username && crypt($userPass, $obj->password) == $obj->password){
                             $_SESSION['username'] = $userName;
                             $_SESSION['roles'] = $obj->roles;
-                            var_dump($_SESSION['roles']);
                         }
                         else{
                             $_SESSION['username'] = '';

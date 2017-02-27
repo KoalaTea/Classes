@@ -1,14 +1,14 @@
 function orderDrink(drinkname) {
   var inst = document.getElementById("instructOrder").value;
   $.get({
-    url: "/order_drink.php",
+    url: "/cgi-bin/order_drink.php",
     data: {
       drink: drinkname,
       instructions: inst
     }
   });
-  window.location = "/recent_orders";
+  window.location = "/cgi-bin/recent_orders.php";
 }
 function cancelOrder(){
-  window.location = "menu";
+  window.location = "/cgi-bin/menu.php";
 }

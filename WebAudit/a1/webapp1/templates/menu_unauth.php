@@ -7,19 +7,6 @@
               </div>
           </div>
           <div class="panel-body">
-              <div class="tr" id="CustomDrink">
-                <div class="td">
-                  <div class="col col-xs-4" align=left>
-                    <img style="height: 100%; width: 100%;" src="/static/images/drinks/custom_drink.png">
-                  </div>
-                  <div class="col col-xs-8" align=left>
-                    <h3 class="drink-title"><b>Custom</b></h3>
-                    <ul>
-                        <li class="drink-text">Design a drink of your own!</li>
-                    </ul>
-                  </div>
-                </div>
-	      </div>
 <?php
                $conn = new MongoDB\Driver\Manager("mongodb://localhost:27017");
                $filter = [];
