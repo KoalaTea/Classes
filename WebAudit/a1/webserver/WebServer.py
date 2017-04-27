@@ -569,7 +569,7 @@ in the server error log.</p>
                     print("The sever gave us\n" + full_data)
                     client_socket.send(full_data)
                     if not data:
-                        ("The sever broke on us")
+                        print("The sever broke on us")
                         break
                 s.close()
             else:
