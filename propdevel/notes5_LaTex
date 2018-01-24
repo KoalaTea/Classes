@@ -1,0 +1,32 @@
+LaTeX
+overleaf
+
+\title
+\author
+\maketitle
+\section
+\subsection
+\sections* (* means do not number)
+\tableofcontents
+\usepackage
+\begin{align} & is the align symbol
+\end{align*} removes numbering
+\paragraph
+% comments
+$ math $
+$ 2x^2 $
+$ \frac{numer}{denom} $
+$ x^{a_1} $
+\int (integrate, integral)
+\begin{Huge} ... \end{Huge}
+$$ math that will be on it's own line not in the paragraph text $$
+\[ \] samething as $$ $$
+\being{figure} \end{figure}
+\includegraphics
+\caption
+\label{labelstuff:morelabelstuff}
+\cite
+\bibliographystyle
+\bibliography{filname} with filename.bib in folder
+    bibTex
+\url
