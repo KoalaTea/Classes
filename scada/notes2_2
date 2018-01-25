@@ -1,0 +1,109 @@
+MAC
+    net - MAC protocols in sensor networks
+    security - Message Authentication codes
+
+Discussion sign up 2/6/2018
+    Short presentation - get class engaged 20 mins
+Team of 2 Joe
+Project topic sign up on myCourses Week 7 Joe
+
+Medium Access Control
+    Wireless Medium Access
+        Controlling when to send a packet andwhen to recieve a packet
+            Challenging with one radio
+        Wireless channel is a shared medium
+            Wireless channel is a shared medium
+            radios transmittin in the same frequency band interfere with each other - collisions
+            ethernet is also shared medium
+        why the hype for sensor networks
+
+Energy Efficiency in WSN MAC design
+    what causes energy wastage?
+        collisions
+        Idle listening
+        Overhearing
+        protocol overhead
+        computational complexity
+
+MAC design options
+    Wireless medium access
+    Centralized
+        schedule based
+            cell networks
+        contention based
+            wifi
+    distributed
+        schedule based
+            clustering?
+        contention based
+            free for all no management
+
+    Contention based
+        no centralized resource allocaation required    - Advantage
+        collisions occur                                - Disadvantage
+    Schedule based
+        no collisions                                   - Advantage
+        requires resource allocation/management control - Disadvantage
+
+    Contention based access
+        CSMA/CD 802.3 ethernet MAC
+        CSMA/CD Wireless can we implement it?
+            CSMA/CD layer 2 acks
+                /CA RTS/CTS
+                    Request to sent / Clear to send
+                    RTS
+                    CTS
+                    Data
+                    Ack
+    Hidden Terminal Problem
+       /|A \ B / C|\
+       A can see B but not C C can see B but not A
+       A and C send to B collision occurs but they do not know eachother
+       B sends CTS when A and C send RTS
+
+    Virtual Carrier Sensing
+        Network Allocation Vector (NAV)
+
+    802.11 CSMA/CA
+        how are collisions avoided
+            Duration fields -> NAV
+
+        CD Acknowledgments
+    
+    Contention-based MAC? why not single hop?
+        sensors
+
+    Sensor MAC Design primary and secondary considerations
+        Primary
+            Energy Efficiency
+            Scalability and Availability
+    S-MAC Contention Based Mac Protocol
+        Developed by Ye, Heidemann and Estrin
+        Goal: Energy Efficiency by reducing idle listening and overhearins, Collision avoidance, In-network processing
+        Tradeoff: Latency, per-node Fairness
+        some features:
+            Periodic listen and sleep - reduce idle listening
+            overhearing avoidance
+            Collision avoidance capability - RTS/CTS with a difference
+            Message Passing (Message level handling)
+    Idle listening
+        listen__sleep__listen__sleep__...>
+
+    Overhearing Avoidance
+        sleep when neighbors talk
+    
+    Message Passing
+        ....
+
+    RTS sets NAV for reciever
+    CTS sets NAC for non sender and non reciever sensors
+
+    Energy saving due to avoiding overhearing by using message passing
+    Energy saving due to periodic sleep
+
+
+Paper
+    what assumptions are being made
+    what is threat model
+    verification method
+
