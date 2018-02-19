@@ -1,0 +1,65 @@
+limitations
+    power limitations
+
+Sensor network security goals and services
+    data integrity
+    data freshness
+
+tinysec
+    a light-weight generic security framework for sensor networks
+    entirely software based
+    encrypt and authenticate all communications w/o much performance degradation
+
+Security Goals & focus
+    WSN suffer from all issues typically associated with wireless
+        easy to eavesdrop, inject, alter data
+    WSN are also susceptible to
+        Resource consumption...
+
+Security Primitives: MAC Message Authentication Code
+Security Primitives: IV
+    semantic security
+    Adversaries should have no better than 50% change of guessing any yes/no question about message
+
+TinyOS
+    30bytes frame (8bytes IV is alot of overhead)
+
+Design goals
+    Security
+        Authentication and Message intgrity
+        Confident
+        not replay protection
+    Performance
+        Cryptography increase message size
+        tune sec strength for reasonable protection to minimal cost
+    ease of use
+        sec platform for higher level protocols
+        transparenc
+        portability
+
+Security Replay protection
+    let applications put it in not at link layer
+
+TinySec design goals performance
+    overhead with cryptographic solutions
+        incease in message length
+            decrease throughput
+            increase latency
+            intrease power consumption
+        increas in cpu ram usage
+
+design goals ease of use
+    higher level sec rprotocol will rely on tinysec
+
+2 options
+    tinysec-auth
+        authentication only
+        only ensure data recieved is from a trusted mode
+        good when data does not need to be private
+    tinysec-AE
+        auth and encryption
+        MAC computered over encrypted data and the packet header
+        ensures data recieved is from a trusted node
+        prevents adversaries from seeing data
+
+

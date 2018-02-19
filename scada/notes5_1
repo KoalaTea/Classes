@@ -1,0 +1,33 @@
+lightweight cryptography
+    primitives
+        algos, ciphers
+    schemes
+        modes of encryption, authenticaiton
+    protocols
+        key distribution, authentication
+
+    constrained
+
+    not
+        weak crypto
+        intended to replace traditional crypto
+            focus limited by operational constraints
+example area: sensors/IOT
+    traditional asymmetric cryptosystems do not perform very well
+        N = pq
+        phi(n) = (p-1)(q-1)
+        gcd(e,phi(n)) = 1
+        choose d such that e.d = 1 mod phi(n)
+        public key -> e,n
+        private -> d
+        C = M^e mod n
+        M = C^d mon n
+
+Performance AES SHA1
+    AES 1.62/2.49 microJ/byte enc/dec
+    SHA-1 5.9 microJ/byte
+
+Performance of Block Cipher Modes
+    decryption is more power usage
+
+

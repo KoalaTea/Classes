@@ -1,0 +1,85 @@
+Sensor network Multi-hop Architectures
+
+medium access
+    scheduled access
+        someone tells you when to transmit and recieve based on time...
+        LEACH
+    contention based
+        nodes compete for access
+        S-MAC
+
+How is energy wasted
+    idle listening
+        sleep cycle
+    collistion avoidance
+    message passing
+        RTS CTS
+    overhearing
+        rts cts sleep when neighbors transmitting
+    in network processing...
+
+Architecture
+    flat-architecture
+        sink at end, report up then they report up end at sink
+    Hierarchical
+        clusting, sinks in each cluster slide 4 Cluster heads communicate and lead to sink
+
+routing
+    route holes
+        dying connections in flat networks makes impossible to go towards sink
+
+Flat network
+    all sensor nodes are peers
+    same role - sense and relay
+    usually same resources
+    contention based MAC
+Hierarchical
+    ...
+    options
+        singlhop single tier
+            single up in each cluster
+        multihop
+            multiple hops in a single cluster
+        singlehop multitear
+            cluter has single hop but clusters in clusters
+slide 7 nope
+hierarchical wit hschedules
+flat with contention
+
+LEACH
+    Low energry adaptive clusting hierarchy
+    integrates clustering and routing
+    integrates sleep cycles
+    TDMA CDMA-based MAC protocol for hierarchical networks
+    schedule based
+
+    Assumption 
+        All nodes can use power control
+        rotating cluster-heads
+        all nodes can support different MAC protocols
+
+    look at  laters
+
+    Clustering algorithm features
+        Requeires cluster heads - localized coordination and control for cluster set-up and operation
+        Adaptive clusters and rotating cluster-heads
+            randomized rotation of cluster heads
+        communication using TDMA within clusters
+        managing multiple clusters using CDMA
+        cluster-heads communicate with sink directly
+        cluser-heads perform data aggregation
+
+    Dynamic clusters
+        number of clusters does not change
+
+    0 an 100 no clusters from curve slide 14 5 is optimal which is why 5 clusters
+    less than 5 farther from sink more transmition power
+    right goes up more cluster heads have to be up more goes to sink
+
+    Cluster Head eletcion Algorithm
+        mathhhhhh :(
+        Distributed stochastic algorithm
+        selection based on 'rounds' of operation
+        p - percentage of nodes desired to be cluster-heads
+        # of rounds - 1/p
+        

@@ -1,0 +1,90 @@
+sencsor and scada security
+    goals and services
+        confidentiality
+        integrity
+            auth
+        x replay protections
+        x physically security
+        x resource consumption
+
+symetric key encryption options
+    stream ciphers
+        symmetric key based cipher
+        faster than block ciphers
+        if we ever us the same IV it is highly likely both messades can be decrypted
+            we have limited recourses to vary the IV
+            must use a block cipher algorithm
+    block ciphers
+        symmetric key based cipher
+        operates on blocks of data
+        DES AES Skipjack RC5
+
+CBC encryption
+       Plaintext                                plaintext
+    IV>>v                            >>>>>>>>>>>>v
+    key>block cipher encryption      ^       key>block cipher encryption
+        v                            ^           v
+        ciphertext >>>>>>>>>>>>>>>>>>^           ciphertext>>>>>>>>>>>>>>>>>>>>...
+
+
+CBC decryption
+    ciphertext
+     v>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>v
+     block cipher decryption            v
+  IV>v                                  
+     plaintext
+
+@sender
+    CBC encryption for ciphertext
+    CBC encryption for MAC
+
+Security analysis
+    Message integrity and Authenticity
+        to brute force 32 bit MAC 4 bytes
+            attempts
+            max 2^32
+            expected 2^31
+        for our data rate
+            it would take 20 months to send this many packets at 19.2kb/s
+    message confidentiality
+        analysis based on IV length assuming no reuse
+            8 byte counter or 16 byte random IV would be sufficient
+        8 byte total IV
+            2 destination, 1 AM , 1 length, 2 source, and 2 counter
+            try to maximize packets each mode cna send before global reuse of an IV
+        each node can end 2^16 packets before IV reuse
+        IV reuse only problem when using same secret key
+
+Keying mechanisms
+    how do we distribute secret keys to trusted nodes
+    tinysec can work with any keying mechanism
+    network wide
+        1 key for all authorized nodes in the network
+        no protection against node capture attacks
+    per link
+        each pair of nodes that communicate share a key
+        more complex key managemenet
+    per group
+        each set of nodes that communicate share a key
+    tinysec key means a pair of skipjack keys one for encrypting data one for computing MAC
+
+tinysec impleentations
+    implemented for tinyos
+        runs on mica mica2 mica2dot
+    3000 lines of nesC code
+    tinysec uses 728 bytes of RAM and 7146 bytes of program space
+        good
+    tinyOS scheduler modified to be a priority FIFO queue
+
+tinesec overhead
+    energy expended in:
+        frame size increased
+        extra computation due to crypto
+        
+cipher computation costs
+    cipher algorithm
+        affects computation time
+        must complete in time for data to be ready for the radio
+    both RC5 and Skipjack are 64 bit block ciphers
+
+conclusions

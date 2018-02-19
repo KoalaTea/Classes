@@ -1,0 +1,86 @@
+LEACH cont.
+
+p = percent of nodes as head
+1/p = # of rounds
+T = p/(1-p(r mod (1/p)))
+r = current round
+G = # of nodes eligble to be cluster head in this ground
+
+example
+r = 0
+T = p = 5/100
+|G| = 100
+...
+20 intervals
+0|+++++|+++++|+++++|....|++++++|1
+       t=5/100                  100/100
+  _____ Cluster heads for round 0
+r = 1 round 1
+T = .005/1-.05(1)
+  = .05/.95 = 5/95
+|G| = 95
+19 intervals
+0|+++++|+++++|....|+++++|1
+       5/95
+
+r-19
+T= .05/1-.95 = 1
+|G|= 5
+0|+++++|1
+
+Probability based mechanism
+after 1/p rounds are over all nodes become eligible to be CH again
+    designed so each node becomes a cluster head at least once
+
+phase flow chart
+            Am I CH?
+    yes                     no
+    Announce CH status      -Wait for CH announcement
+    Wait for Join_REQ msg   -Send join_Red
+    Create TDMA sched send  -Wait for sched from CH
+            Enter steady start operations
+
+Cluster communications after CH selection each round
+    CH forms clusters
+    CH announces a TDMA sched
+    ...
+
+sleep periods
+    cluster clients can sleep between TDMA slots
+    CH must be awake
+    each cluster can use CDMA have unique spreading code - intracluster interference
+
+Simulation results for LEACH
+
+pros
+    load balancing
+    TDMA
+    2 hops to read sink
+    distributed hierarchical approach
+    easy to aggregate data at CH
+cons
+    CH selection algo
+        random selection of CH can lead to non-optimal selections
+    Expensive assumption - all nodes capable of long distance transmission
+    not query driven or event driven
+    failure of CH - network segmentation
+    Many others
+
+despite drawbacks idea good and merit has
+led to LEACH-C -M -B -F -V....
+
+Security Challenges
+    Lack of physical security
+    limited physical rsources
+    end to end in network prossessing
+
+    limited memory and storage space
+        sec colutions cannot have large code space
+    Power limitations
+        any crypto added should be energy aware
+                
+
+semantic security
+    repeated encryption of the same plaintext should not come out the same
+
+5_2 exam 1
