@@ -1,4 +1,14 @@
-\section{Introduction}
+\section{Literature Review}
+\begin{itemize}
+
+\item How, when the problem was raised by whom, what event, etc. 
+\item Any attempts have been proposed to attack the problems
+\item Pros and Cons of each existing solutions
+\item How does your proposed solution fit within here, i.e., your solution is improving an existing solution, just another solution, or revolutionizing the way of thinking?
+\end{itemize}
+
+Make sure to cite references. Here is how to cite the great textbook written by Knuth \cite{knuth2006art}in the latex. Here is the way how to cite a journal article written by the father of computer science Alan Turing \cite{turing1950computing}.
+\subsection{Introduction}
     Continuous Integration (CI) has grown in popularity, being used in both enterprise and open source projects. CI provides an increase in productivity to programming projects by creating an 
     environment where building, testing, and often deployment is done automatically. When developers do not need to do these tasks manually they can spend more time programming and finding bugs that 
     trigger a failed build or failed test. Most research into CI looks at increasing productivity of developers and the enforcement of development standards. The potential use of CI for security has 
@@ -10,7 +20,6 @@
     avoid wasted time with failed builds from false positive. Another potential feature is an inclusion of fuzzers, which were recently used against memory forensic tools to look into anti-forensics 
     techniques through crashing the tools\cite{Case}.
 
-\section{Reviews}
 \subsection{Test case generation}
     Test case generation is a discipline that focuses around automatically generate unit tests for Software Engineering projects. The discipline sometimes focuses on generating tests from a base,
     such as the source code or a config file, and generating a set of tests from the base or it focuses on taking existing tests and exanpding them to cover more features.
@@ -73,6 +82,6 @@
     parameterized queries are used, binary protections are enabled in compilation scripts, and unsafe functions are not used. Another use could be in including fuzzing in a pipeline. I have not seen 
     any research into automating fuzzing into testing an application. Depending on the project it could be a very useful tool to find bugs.
 
-	I would like to implement a security focused pipeline which will recommend a number of the common bugs to test for. I also want to try to add fuzzing and see how viable it is as a tool in CI. The
-    pipeline will also include some ASCATs, looking at the output from them in a warning state. The output can still be followed up on to decide whether or not it is a false positive.
+	I am implementing a security focused pipeline which will recommend a number of the common bugs to test for. The pipeline will also include some ASCATs, looking at the output from them in a 
+    warning state. The output can still be followed up on to decide whether or not it is a false positive.
 

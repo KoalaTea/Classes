@@ -47,9 +47,11 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
 
-\usepackage{xcite}
-\usepackage{xr-hyper}
-\externaldocument{references}
+\usepackage[backend=bibtex]{biblatex}
+\addbibresource{ref.bib}
+%\usepackage{xcite}
+%\usepackage{xr-hyper}
+%\externaldocument{references}
 
 % --------------------------------------------------------------------
 % Definitions (do not change this)
@@ -69,17 +71,17 @@
 % --------------------------------------------------------------------
 % Metadata (Change this)
 % --------------------------------------------------------------------
-\title{\Large \textsc{CSEC 793 Capstone in Computing Security \\ 
+\title{	\Large \textsc{ CSEC 793 Capstone in Computing Security \\ 
 															Project Report} 	% Subtitle
 		 	\\[2.0cm]								% 2cm spacing
 			\HRule{2pt} \\						% Upper rule
-			\LARGE \textbf{\uppercase{MS Capstone Literature Review}}	% Title
+			\LARGE \textbf{\uppercase{MS capstone literature review}}	% Title
 			\HRule{2pt} \\ [0.5cm]		% Lower rule + 0.5cm spacing
 			\Large \today			% Todays date
 		}
 
-\author{
-    	Ryan Whittier\\	
+ \author{
+		Ryan Whittier\\	
 		Department of Computing Security\\	
         College of Computing and Information Sciences \\
 		Rochester Institute of Technology\\
@@ -112,8 +114,6 @@
 \include{introduction}
 \include{literature_review}
 \include{references}
-
-
 
 % ------------------------------------------------------------------------------
 % End document
