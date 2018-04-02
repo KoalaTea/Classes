@@ -1,10 +1,28 @@
 \section{Introduction}
+    The project in this paper is the development of a security focused continuous integration (CI) pipeline. The goal is to make a pipeline that focuses on security in an attempt to improve web
+    application security. This pipeline will automatically run a series of tests against a repository of configuration files and code. These tests will enforce correct configurations and security
+    practices within committed changes.
 
-In this section, you need to address the following items:
+    CI is a technique that is used to lead to better development practices, but also to speed up development releases. Those benefits can also be tailored to improve security in 
+    development. Many penetration tests or bug reports revolve around the same information repeated for different cases. These reports often have a common solution. If we discuss web applications, one 
+    common vulnerability is cross site scripting (XSS). XSS vulnerabilities have the short term recommendation of encoding all user input to avoid users input being interpreted as part of the webpage. 
+    The long term recommendation is to set up a full Content Security Policy (CSP), limiting where scripts and HTML tags can be loaded from. Companies generally choose the short term route of fixing 
+    each individual case, but this will cost them time and money in the long term, eventually they decide to implement a long term solution. In this example companies will often implement encoding, 
+    but as they expand the web application, they find the same bug. The company eventually switches to creating a CSP and configuring it correctly so new expansions can not be affected by a XSS bug.
+    
+    Everyday applications are getting larger and are handling enormous amounts of data. Many of these applications are services that companies provide, such as Facebook and Netflix. All of these 
+    applications need to provide security for both their internal company data and the end user's data. The problem is that as these applications grow, their logic gets more complex and mistakes will 
+    be made, potentially introducing vulnerabilities into the codebase without the developers knowing it. Sometimes these mistakes are simply forgotten flags on cookies and other times they can be 
+    complex flaws in the business logic of the application. These mistakes can result in damage ranging from defacement of a company site, to a complete breach of a company's internal network.
 
-\begin{itemize}
-\item The goal of this project
-\item The rationale of the project 
-\item The importance of the project
-\item Your main contributions to the project  
-\end{itemize}
+	A bug does not need to be exploited by a malicious actor to cause financial loss for the company. Many companies offer bug bounty programs, in which a researcher can discover and report a bug 
+    for a reward. The rewards vary by company, but often times the researcher will receive a substantial monetary reward, depending on the severity of the bug discovered. This means that each time 
+    the company releases updates to their applications, researchers will be scavenging for more vulnerabilities, which can costly for the company. It may also cost the company's security team a 
+    significant amount of time, as they need to look into and verify each report that is submitted. Often times, researchers can find very common vulnerabilities in the application, that usually 
+    result from developers attempting to push out new features at such a rapid pace.
+
+	CI can be used to catch simple mistakes automatically, by ensuring that the common bugs are found before the changes are deployed into production. By finding these bugs before they are introduced 
+    into production, the number of submissions from bug bounty programs will decrease dramatically. This means that the bug reports that are submitted by researchers will be of higher quality and 
+    provide more value to the company.
+
+
