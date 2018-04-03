@@ -1,0 +1,53 @@
+Minisec
+    Tinysec
+        confidentiality, integrity, Authentication
+        encryption - SKIPJACK-CBC
+        signing - CBC-MAC - integrity and authentication
+        operating modes
+            tinysec-auth
+            tinysec-ae
+        Replay protection - no
+        IV management - header
+        Overhead bytes
+            auth - 1 byte
+            ae - 6 bytes
+    goals
+        replay protection, confidentiality, authentication, <integrity?>
+        low energy consumption
+    modes
+        minisec-U
+            uses synchronized counters for replay protection
+            between pairs of nodes (unicast)
+        minisec-B
+            uses Bloom filters to keep track of already seen packets for replay protection
+            used for broadcasts
+    Assumptions
+        pre-distributed symmetric keys between communicating parties
+            no key management
+        routing protocol is in place
+            no routing
+        minisec-B
+            loose time synchronization
+    Attacker model
+        dolev-yao attacker model
+            the advesary can obtain any message
+            act as a legitimate user
+            can become the reciever to any sender
+            can send messages to messages to an entity by impersonating any other entity
+    traditional approach authenticated encryption
+        encrypt then mac
+        cost
+            - two encryptions
+            - ...
+    what is OCB
+        authenticate encryption
+            encryption and mac in one shot
+        computational cost almost same as CBC enc (only once unlike CBC which needs to be run twice to get MAC as well)
+        uses single block-cipher key each block-cipher keyed with it
+    minisec-U: OCB
+                plaintext               Ciphertext MAC\TAG
+                    |                            | |
+        key     >   |                      key>> OCB
+        IV\nonce>  OCB                     Nonce>OCB
+                  <| |>                         <| |>
+         Ciphertext   MAC/TAG           plaintext   Error

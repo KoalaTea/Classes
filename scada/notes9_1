@@ -1,0 +1,62 @@
+paper...
+
+Zigbee 802.15.4
+Thursday next week is exam
+    tinysec minisec routing (XMesg) Zigbee
+
+Zigbee
+    zigbee is not == 802.15.4
+    Network Characteristics
+        operate reliably for years without intervention
+        long battery life
+        low infra costs
+        low complexity small size
+        low data rate
+        QoS requirements low
+        form by themselves
+        scale to large sizes up to 65k nodes
+    Alliance
+        ...
+    802.15.4
+        MAC
+        Phy (wireless ranges GHz MHz)
+    Zigbee
+        api
+        security
+        network
+            star mesh cluster-tree
+    ZIGBEE Node
+                 micro controller  TX + RX antenna
+        sensing, computation,      communication
+        can support multiple sensing sub-units depending on the application (sensing)
+
+        can operate as full function device (FFD) or reduced function device (RFD)
+        RFD no relaying
+        Sink -> definitely FFD
+        sensor nodes maybe FFD or RFD
+
+    ZIGBEE Device Types
+        coordinator -FFD, network management
+            each network has one coordinator
+        Router - FFD used in tree and mesh topologies to expand network coverage
+            does everything coordinator does except starting a network
+        End Device - can be RFD - consumes less power
+            has to be connected to router or coordinator
+    do not want singlepoint of failure
+        star, tree design
+        mesh avoids this, gives multiple paths to coordinator
+            makes us have to deal with routing
+
+    Security in ZIGBEE
+        Goals conf, integ, authent, replay protection
+        replay protection relies on frame counters
+        AES CCM uses CRT for encryption and CBC for MAC
+        32 to 128 bit MAC
+        8 byte IV sent with packet
+        can have 30 byte overhead!
+    ZIGBEE Trust Center (TC)
+        dedicated network device or coordinator that is trusted by other parties in the network
+        storeds a list of devices and link keys, network keys
+            A set of network keys is held by the Trust Center and current network key is identified
+                by a key sequence number
+

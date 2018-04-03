@@ -1,0 +1,93 @@
+Zigbee
+
+end of today is the exam content
+
+Tinysec, minisec, routing including Xmesh, zigbee
+
+Tinysec          Minisec                zigbee
+CIAuth           +replay protection     communication/standard CIA + replay
+                                        star/mesh/tree topologies
+assumes keys are in place               coordinator (Starts network, management, key management), router, end device (no forwarding)
+-Encr Cipher
+skipjack        skipjack                AES 128
+-encr mode
+CBC             OCB                     CCM (counter mode) CTR for CBC and MAC
+-IV management
+entire IV pack  partial IV in packet    entire IV sent in packet
+-packet overhead
+auth 1b         3b                      up to 30b
+ae   5b
+
+
+Zigbee
+    32-128 bit MAC
+    8 byte IV
+    up to 30 byte packet overhead
+    CIA and replay protection
+
+    Centralized Trust Center
+        dedicated network device that is trusted by other parties in the network
+            usually coordinator is also the TC
+        stores a lsit of devices and link keys, network keys
+            a set of network keys is held by the Trust Center and current network key is identified by a key sequence number
+        types of keys
+            network key         - same for entire network
+            app layer link key  - pairwise (between two devices) link key with TC preconfigured
+            master              - used for network and link key derivations not used for encryption
+        performs key update
+            perioudically updates network key
+            updates the network key by encryptin the new network key with the old network key and sending it our as a boroadcast then request all use new key
+        performs device authentication/handles join requests
+
+    security modes
+        standard mode
+            standard network key
+            mem req no incread with network size
+            if net key not pre conf sent to node by TC
+            no auth
+        High Security mode
+            TC maintains list of device and keys
+            provides auth
+    threat models
+        network key protects against un authorized nodes
+        link keys protects against node that bypassed network key
+
+    end nodes must have a link key with TC to start in High security mode (for auth)
+
+    (link keys were predictable)
+
+    network layer (up to network layer not encrypted, Mac layer would be everything up to MAC layer)
+        ciphertext the app layer data
+        add auxilary header (IV), add MIC (MAC just different name)
+    
+    protecting at the APS layer (app layer)
+        APS data is encrypted with APS header left alone then all of APS layer is encrypted
+
+    Zigbee 3.0
+        allow decentralized security network without the trust center
+        every zigbee router authenticates and distributes keys to devices that attempt to join the network
+        there is no central node that has a view of all authenticated nodes
+            less insight
+
+        Install codes
+            link keys used to authenticate a node into a centralized security network are created using install codes
+            random install code up to 18 bytes
+            MMO Matyas-Meyer-Oseas hash function used to derive the link key from the install code
+            TC should have knowledge about the install code on each node!
+
+        what was added to 3.0? - exams
+            dist TC response
+            install codes instead of preconfigured link keys
+
+        comparision on packet overhead
+            Minisec says they good
+            tiny sec no replay zigbee 30b overhead
+
+limitations of crypto
+    cannot prevent replayed packets
+    delayed packets
+    traffic analysis
+    packet jamming
+    malicious insiders, captured nodes
+
+

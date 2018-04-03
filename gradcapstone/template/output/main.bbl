@@ -1,0 +1,287 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.8 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\sortlist[entry]{nty/global/}
+  \entry{bandit}{misc}{}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{B}
+    \field{sortinithash}{B}
+    \field{title}{Bandit python source code analysis tool}
+    \verb{url}
+    \verb https://github.com/openstack/bandit
+    \endverb
+  \endentry
+
+  \entry{Bass}{article}{}
+    \name{author}{1}{}{%
+      {{hash=BL}{%
+         family={Bass},
+         familyi={B\bibinitperiod},
+         given={Len},
+         giveni={L\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{BL1}
+    \strng{fullhash}{BL1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{B}
+    \field{sortinithash}{B}
+    \field{pages}{4\bibrangedash 7}
+    \field{title}{Securing a Deployment Pipeline}
+    \field{journaltitle}{IEEE/ACM 3rd International Workshop on Release
+  Engineering}
+    \field{year}{2015}
+  \endentry
+
+  \entry{Case}{article}{}
+    \name{author}{1}{}{%
+      {{hash=CA}{%
+         family={Case},
+         familyi={C\bibinitperiod},
+         given={Andrew},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CA1}
+    \strng{fullhash}{CA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \field{pages}{S86\bibrangedash S93}
+    \field{title}{Gaslight: A comprehensive fuzzing architecture for memory
+  forensics frameworks}
+    \field{journaltitle}{DFRWS USA d Proceedings of the Seventeenth Annual
+  DFRWS USA}
+    \field{year}{2017}
+  \endentry
+
+  \entry{WebTestGeneration}{article}{}
+    \name{author}{1}{}{%
+      {{hash=FAM}{%
+         family={Fard},
+         familyi={F\bibinitperiod},
+         given={Amin\bibnamedelima Milani},
+         giveni={A\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{FAM1}
+    \strng{fullhash}{FAM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{F}
+    \field{sortinithash}{F}
+    \field{pages}{67\bibrangedash 78}
+    \field{title}{Leveraging Existing Tests in Automated Test Generation for
+  Web Applications}
+    \field{journaltitle}{29th IEEE/ACM International Conference on Automated
+  Software Engineering (ASE)}
+    \field{year}{2014}
+  \endentry
+
+  \entry{findsecbugs}{misc}{}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{F}
+    \field{sortinithash}{F}
+    \field{title}{Find Security Bugs java source code analysis tool}
+    \verb{url}
+    \verb https://find-sec-bugs.github.io/
+    \endverb
+  \endentry
+
+  \entry{findbugs}{misc}{}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{F}
+    \field{sortinithash}{F}
+    \field{title}{FindBugs java source code analysis tool}
+    \verb{url}
+    \verb http://findbugs.sourceforge.net/
+    \endverb
+  \endentry
+
+  \entry{TestCaseSelction}{article}{}
+    \name{author}{1}{}{%
+      {{hash=GM}{%
+         family={Gligoric},
+         familyi={G\bibinitperiod},
+         given={Milos},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{GM1}
+    \strng{fullhash}{GM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+    \field{pages}{361\bibrangedash 372}
+    \field{title}{An Empirical Evaluation and Comparison of Manual and
+  Automated Test Selection}
+    \field{journaltitle}{29th IEEE/ACM International Conference on Automated
+  Software Engineering (ASE)}
+    \field{year}{2014}
+  \endentry
+
+  \entry{Hilton}{article}{}
+    \name{author}{1}{}{%
+      {{hash=HM}{%
+         family={Hilton},
+         familyi={H\bibinitperiod},
+         given={Michael},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{HM1}
+    \strng{fullhash}{HM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{H}
+    \field{sortinithash}{H}
+    \field{pages}{426\bibrangedash 437}
+    \field{title}{Usage, Costs, and Benefits of Continuous Integration in
+  Open-Source Projects}
+    \field{journaltitle}{International Conference on Automated Software
+  Engineering (ASE).}
+    \field{year}{2016}
+  \endentry
+
+  \entry{Holck}{article}{}
+    \name{author}{1}{}{%
+      {{hash=HJ}{%
+         family={Holck},
+         familyi={H\bibinitperiod},
+         given={Jesper},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{HJ1}
+    \strng{fullhash}{HJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{H}
+    \field{sortinithash}{H}
+    \field{pages}{40\bibrangedash 53}
+    \field{title}{Continuous Integration and Quality Assurance: a case study of
+  two open source projects}
+    \field{journaltitle}{Australasian Journal of Information Systems 11(1)}
+    \field{year}{2012}
+  \endentry
+
+  \entry{hpkp}{misc}{}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{I}
+    \field{sortinithash}{I}
+    \field{title}{Intent To Deprecate And Remove: Public Key Pinning}
+    \verb{url}
+    \verb https://groups.google.com/a/chromium.org/forum/#!msg/blink-dev/he9tr7
+    \verb p3rZ8/eNMwKPmUBAAJ
+    \endverb
+  \endentry
+
+  \entry{spaceb0x}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=s}{%
+         family={spaceb0x},
+         familyi={s\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{s1}
+    \strng{fullhash}{s1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{S}
+    \field{sortinithash}{S}
+    \field{title}{Exploiting Continous Integration (CI) and Automated Build
+  Systems, DEFCon 25}
+    \verb{url}
+    \verb https://media.defcon.org/DEF\%20CON\%2025/DEF\%20CON\%2025\%20present
+    \verb ations/DEFCON-25-spaceB0x-Exploiting-Continuous-Integration-UPDATED.p
+    \verb df
+    \endverb
+  \endentry
+
+  \entry{googletest}{misc}{}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \field{title}{Testing at the speed and scale of Google, 2011}
+    \verb{url}
+    \verb http://goo.gl/OKqBk
+    \endverb
+  \endentry
+
+  \entry{googlescale}{misc}{}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \field{title}{Tools for continuous integration at Google scale, 2011}
+    \verb{url}
+    \verb http://www.youtube.com/watch?v=b52aXZ2yi08
+    \endverb
+  \endentry
+
+  \entry{Vehent}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=VJ}{%
+         family={Vehent},
+         familyi={V\bibinitperiod},
+         given={Julien},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{VJ1}
+    \strng{fullhash}{VJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{V}
+    \field{sortinithash}{V}
+    \field{note}{Enigma}
+    \field{title}{Test Driven Security in Coninouos Integration}
+    \verb{url}
+    \verb https://www.usenix.org/conference/enigma2017/conference-program/prese
+    \verb ntation/vehent
+    \endverb
+    \field{type}{Presentation}
+    \field{year}{2017}
+  \endentry
+
+  \entry{Zampetti}{article}{}
+    \name{author}{1}{}{%
+      {{hash=ZF}{%
+         family={Zampetti},
+         familyi={Z\bibinitperiod},
+         given={Fiorella},
+         giveni={F\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{ZF1}
+    \strng{fullhash}{ZF1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{Z}
+    \field{sortinithash}{Z}
+    \field{pages}{334\bibrangedash 344}
+    \field{title}{How Open Source Projects use Static Code Analysis Tools in
+  Continuous Integration Pipelines}
+    \field{journaltitle}{IEEE/ACM 14th International Conference on Mining
+  Software Repositories (MSR)}
+    \field{year}{2017}
+  \endentry
+\endsortlist
+\endinput

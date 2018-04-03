@@ -1,0 +1,38 @@
+crypto paper
+
+Minisec
+    tinysec goals + replay protection
+    both use SKIPJACK - minisec can use others?
+    1 pass vs 2 passes in tinysec
+    IV management
+        tinysec zigbee
+            send IV with packet
+        SPINS
+            synchronized IV at sender and receiver
+            disadvantage: resync protocol in case IVs unsync
+            IV kept as incrementing counter on both parties
+            advantage: eliminate IV in each packet sent
+        MiniSec-U
+            only send last 3 bits of IV
+        SPINS and Zigbee: Per Sender State
+    Minisec-B
+        How can we detect replay attacks without per-sender state for more than one sender?
+        Replay protection approach:
+            Case 1: Replaysoutside a timing window
+                timing based - detect replays outside of timing window
+                    Requires loose time synchronization
+            Case 2: ...
+        timing based approach
+            time intervals
+        bloom filters within an epoch
+            space efficient data structure for fast probabilistic membership test
+                tells rapidly whether an element is present in a set
+            probabilistic membership query ....
+            if no new places in bloom filter it is a replay
+                if at least one then it is not
+                one problem is too many messages and bloom filter does not have enough room - false negatives
+        Implementation
+            ....
+        packet overhead
+            3 bytes - minisec
+            5 bytes - tinysec-AE

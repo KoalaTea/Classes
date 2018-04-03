@@ -1,0 +1,43 @@
+threat model
+Attacker models in sensor networks
+    emission
+        passive
+        active
+    location
+        indoor
+        outdoor
+    quantity
+        aingle
+        multiple
+        coordinated multiple
+    motivation
+        Confid
+        Integ
+        Privacy
+        Unauthorized access
+        DoS
+        Selfishness
+    Rationale
+        naive
+        irrational
+        rational
+    mobility
+        fixed
+        mobile
+How powerful is the adversary
+    Mote class attacker
+        controls a few ordinary sensor nodes
+    laptop class attacker
+        Greater battery & processing power, memory, high-power radio transmitter, low-latency communication
+attacks on information flows
+    interruption
+        block traffic
+    interception
+        overhear
+    modifications
+        MITM
+    fabrication
+        forge packets (fake as sink)
+passive attacks
+    eavesdropping
+    traffic analysis

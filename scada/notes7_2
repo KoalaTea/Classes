@@ -1,0 +1,73 @@
+crypto stuff survey paper
+    man in the middle from serial numbers if asking
+    serial numbers used to generate public key
+        public private in sensors
+    identity based crypto
+
+routing
+    paths
+        find path dest wher best way
+            metrics
+    reactive routing vs proactive routing
+        proactive
+            determines path before
+        reactive - infrastructureless
+            determines path as needed
+    Flat vs heirarchical routing protocols
+        hierarchical
+            leech leach
+        flat
+            do not use addresses, data centric
+            (directed?).... disfusion
+    Network dynamics
+        main compononents in sensor network
+            senser nodes
+            sinks
+            monitored events
+    Node deployment - how to place nodes
+        application dependent
+        deterministic - manually places routing through pre-determined paths
+        random - self organizing scattered - ad hoc network
+            optimal clustering becomes necessary to allow connectivity
+    energy considerations
+        multi hop more efficient
+            more annoying than direct to sink routing wise
+        setting up routes - energy aware
+            short routes low power tranmission
+        direct trans to sink
+            not energy efficient
+    data delivery models
+        time driven - sensors to sink
+        event driven - sensors to sink
+        query driven - bidirectional
+        hybrid
+    node capabilities
+        homogenous
+            same computa same communica same power capacity
+        heterogeneous
+            ...
+    data aggregations, convergecast, in network processing
+        reduce data redundancy
+        reduce trasmitted data
+        suppression
+        max min avg
+        transmission consumes more energy than computation
+
+xmesh
+    routing protocol for self organizing multihop networks
+    do
+        discover
+        managment
+            keep good routes
+        selection
+            pick best routes
+        redistribute as necessary
+    single path routing protocol
+        how to we determin what is a good route
+    any to base routing algorithm
+        maximize expected success rate
+        minimize total cost
+            praent cost - cost to direct parent
+            node cost - total cost to sink
+            link cost - cost of link to parent
+        
