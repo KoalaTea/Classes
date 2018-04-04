@@ -1,15 +1,14 @@
 \section{Conclusions}
-In this section, you should provide a concise summary of your work, state the importance of your idea and your contribution towards solving the problem. Point out any improvement could be done  if you had more time. List some ideas as future work. 
-The project involved creating two applications that were mirrors of eachother in functionality. The applications were created as tests were decided to create appropriate functionality for the tests.
+The project involved creating two applications that were mirrors of each other in functionality. The applications were created as tests were decided to create appropriate functionality for the tests.
 One application was written in python with flask as the web framework, while the other one was written in java with spring as the web framework. Both applications had a home page and a page for
 POSTing data to a form which would return success if the form was POSTed successfully and failed if it was not. This was all the functionality needed for the tests involved.
 All applications were then dockerized. Then the tests were created, which lead to editing the base applications to also have a passing version. Finally the repository for this project was CI enabled
 using travis which a travis-ci.yml file.
 This was all to emulate a corporations environment, there would be an application hooked up to a CI pipeline. Every merge request to master would kick off a build job to run the tests and block on
 failure of those jobs. The goal of this project in this environment is to efficiently mandate security configurations on web applications in this environment. This would ensure expected configurations
-were in place and decrease attack sufrace of the application. To do so, the following is recommended when setting up a security focused pipeline.
+were in place and decrease attack surface of the application. To do so, the following is recommended when setting up a security focused pipeline.
 \begin{itemize}
-    \item Prioritize creating dynamic tests, these can be used accross projects and language
+    \item Prioritize creating dynamic tests, these can be used across projects and language
     \item Create policies that outline the expected configuration based on the dynamic tests and mandate them across projects
     \item Create a method for containerizing all applications developed so that they can easily be tested with the dynamic tests
     \item Include a static analysis tool that focuses on security and the language the project is in into the pipeline

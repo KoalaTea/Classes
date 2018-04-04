@@ -1,17 +1,17 @@
 \section{Project Implementation}
-The projects goal is a way to mandate security with low false positives. The start of this project involved creating a list of checks to implement as shown in Figure~\ref{fig:fig1}.
+The project's goal is a way to mandate security with low false positives. The start of this project involved creating a list of checks to implement as shown in Figure~\ref{fig:fig1}.
 \begin{figure}[!ht]
   \centering
 \includegraphics[width=4in]{unittestchecks}
 \caption{\label{fig:fig1}}The list of checks to implement
 \end{figure}
 The checks were chosen for both their ease of being checked and their security relevance. Tests that could be dynamic were prioritized over those that had to be static. The notation in 
-Figure~\ref{fig:fig1} checks is that a leading $\backslash$ means the test is addressed, a + means that the test has been chosen to be implmented, a - meant the test would not be implemented, and a ?
-meant that their are still questions about the test. The majority of tests implemented are headers, with each one making specifc bugs harder to exploit.
+Figure~\ref{fig:fig1} checks is that a leading $\backslash$ means the test is addressed, a + means that the test has been chosen to be implemented, a - meant the test would not be implemented, and a ?
+meant that there are still questions about the test. The majority of tests implemented are headers, with each one making specific bugs harder to exploit.
 
 The implemented tests were all of the headers tests, and the logging test. The depreciated crypto test and the os test were both found to be done for python in the bandit source code analysis tools
 \cite{bandit}. The HPKP header was dropped due to it's pending removal from chrome in favor of the new Expect-CT header \cite{hpkp}. The headers are chosen because they are easy to test for
-dynamically, the same rational applies to csrf and https. The only static test that is created for this project is the logging test one because it does not require context like authentication being
+dynamically, the same rationale applies to csrf and https. The only static test that is created for this project is the logging test one because it does not require context like authentication being
 addressed for every web page. Figure~\ref{fig:fig2} shows failing dynamic tests and Figure~\ref{fig:fig3} shows passing dynamic tests. At the top of Figure~\ref{fig:fig3} 12 dots can be seen these
 represent the result of the tests in a failed case the . will instead be an F and if the test errors it will be an E.
 \begin{figure}[!ht]
@@ -27,7 +27,7 @@ represent the result of the tests in a failed case the . will instead be an F an
 
 The HTTPS test is tested by verifying that browsing to HTTP root redirects to an HTTPS root and then that doing a GET request against the HTTPS root returns a 200 response. Following the HTTPS test,
 HSTS is tested next by checking the Strict-Transport-Security header and that at least max-age is set, further parts could be included if the developer also wanted includeSubDomains or preload. CSP
-is tested in a similiar way by checking that the Content-Security-Policy header is present and does not have unsafe-inline within any of the Content-Security-Policy headers. The rest of the headers
+is tested in a similar way by checking that the Content-Security-Policy header is present and does not have unsafe-inline within any of the Content-Security-Policy headers. The rest of the headers
 are implemented soley by checking for their existence. The headers have settings that are too different between projects so they are not tested for. The CSRF test is implemented using a list of
 dictionaries to keep track of end points. Each dictionary is of an endpoint that has a form to fill. The dictionaries have the endpoint, data to post, fail$\textunderscore$text which is the text
 present if the form submission failed, success$\textunderscore$text which is the text present if the form submission succeeds, a fail$\textunderscore$status$\textunderscore$code which is the status
@@ -53,9 +53,9 @@ builds. Figure~\ref{fig:fig4} is the travis.yml configuration file.
 \end{figure}
 The configuration involved install steps that installed docker-compose. This is required for running the dynamic tests against java, since it cannot just hook into the internal testing tools like
 with flask. There are also settings for what version of python this project uses, that sudo is required, and docker needs to be installed. Then the stages are defined. There are two stages for python
-and two for java. The TEST environment variables are set for visability into what each build is doing from the travis webpage. In both python builds, first bandit is run against it with the tests
-that address the use of subproccess, os, and crypto. Next the unit tests are run against the flask. For the java, first docker is set up and then the unit tests are run against them. If any of the
-static tests trigger or the unittests fail, then the entire build will fail. Figure~\ref{fig:fig5} shows an example of the builds being ran in travis.
+and two for java. The TEST environment variables are set for visibility into what each build is doing from the travis webpage. In both python builds, first bandit is run against it with the tests
+that address the use of subprocess, os, and crypto. Next the unit tests are run against the flask. For the java, first docker is set up and then the unit tests are run against them. If any of the
+static tests trigger or the unit tests fail, then the entire build will fail. Figure~\ref{fig:fig5} shows an example of the builds being ran in travis.
 \begin{figure}[!ht]
   \centering
 \includegraphics[width=6in]{travisbuilds}
