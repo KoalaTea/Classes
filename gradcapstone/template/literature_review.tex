@@ -14,14 +14,14 @@
 
 \subsection{Test case generation}
     Test case generation is a discipline that focuses around automatically generate unit tests for Software Engineering projects. The discipline sometimes focuses on generating tests from a base,
-    such as the source code or a config file, and generating a set of tests from the base or it focuses on taking existing tests and exanpding them to cover more features.
+    such as the source code or a config file, and generating a set of tests from the base or it focuses on taking existing tests and expanding them to cover more features.
 
     One paper from the 2014 Automated Software Engineering conference looked at generating test cases for web from an existing selenium test suite \cite{WebTestGeneration}. 
     This paper goes through the method that is used to generate the new test cases. The method starts by taking a selenium test suite and going though it keeping track of states, 
-    http element interactions, and test case assertions. It uses the base states and element interactions to create a State-Flow Graph, which is a graph of the states with the interations 
+    http element interactions, and test case assertions. It uses the base states and element interactions to create a State-Flow Graph, which is a graph of the states with the interactions 
     that that move from one state to the next and the assertions that are involved to a single state. It then uses a web crawler on each state to discover alternate paths and new states. 
     It then makes use of assertions on the base states to generate new tests for the crawler discovered states. An example given in the paper is that an application that allows you to 
-    create notes is tested with selenium by logging in, clicking the create note element, and then verifiying that an id element had specific text. The test suite was then expanded by crawling
+    create notes is tested with selenium by logging in, clicking the create note element, and then verifying that an id element had specific text. The test suite was then expanded by crawling
     to find the edit note interaction and the delete note interaction. These were then clicked and tested using the assertion, verifying that the id was present and changing the text to match the
     new interactions result text.
 
@@ -88,5 +88,5 @@
 
     The research I am doing involves creating a pipeline with tests that focus on specific frameworks and are tailored towards an application instead of general language based tests. Most source
     code analysis tools look at specific languages instead of focusing on specific libraries or frameworks \cite{bandit, findbugs, findsecbugs}. My tests will also do some dynamic testing
-    instead of just focusing on source code analysis to verify that the protections are in place in a live application. I am following a similiar path to Mozilla in using tests to mandate security
+    instead of just focusing on source code analysis to verify that the protections are in place in a live application. I am following a similar path to Mozilla in using tests to mandate security
     configurations \cite{Vehent}.
