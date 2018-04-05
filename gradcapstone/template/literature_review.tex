@@ -16,25 +16,27 @@
     Test case generation is a discipline that focuses around automatically generating unit tests for Software Engineering projects. The discipline sometimes focuses on generating tests from a base,
     such as the source code or a config file, and generating a set of tests from the base or it focuses on taking existing tests and expanding them to cover more features.
 
-    One paper from the 2014 Automated Software Engineering conference looked at generating test cases for web from an existing selenium test suite \cite{WebTestGeneration}. 
+    One paper from the 2014 Automated Software Engineering conference looked at generating test cases for web applications from an existing selenium test suite \cite{WebTestGeneration}. 
     This paper goes through the method that is used to generate the new test cases. The method starts by taking a selenium test suite and going though it keeping track of states, 
     http element interactions, and test case assertions. It uses the base states and element interactions to create a State-Flow Graph, which is a graph of the states with the interactions 
     that that move from one state to the next and the assertions that are involved to a single state. It then uses a web crawler on each state to discover alternate paths and new states. 
-    It then makes use of assertions on the base states to generate new tests for the crawler discovered states. An example given in the paper is that an application that allows you to 
+    The method then makes use of assertions on the base states to generate new tests for the crawler discovered states. An example given in the paper is that an application that allows you to 
     create notes is tested with selenium by logging in, clicking the create note element, and then verifying that an id element had specific text. The test suite was then expanded by crawling
     to find the edit note interaction and the delete note interaction. These were then clicked and tested using the assertion, verifying that the id was present and changing the text to match the
     new interactions result text.
 
 \subsection{Test case selection}
-    The idea behind test case selection is limiting tests run to save on time during builds. As a code base grows, the number of tests increase. The increase in tests make it more and more expensive
-    and eventually becomes to big a load to do everytime \cite{googletest, googlescale}. This has lead to ways of avoiding running all of the tests on every code change. The ways of running tests
-    have historically been either rerun all of the tests or manually pick test cases to run based off of the changes the developer made.
+    The idea behind test case selection is limiting the number of tests run to save on time during builds. As a code base grows, the number of tests increase. The increase in tests make it more 
+    and more expensive and eventually it becomes too big of a load to do everytime \cite{googletest, googlescale}. This has lead to methods of selecting tests that are relevant to the changes instead
+    of running all of the tests on every code change. The methods of running tests until now, have historically been either rerun all of the tests or manually picking test cases to run based off of 
+    the changes the developer made.
 
     A paper by Milos Gligoric looks at comparing manual test selection against research made into automatic test selection, where automatic test selection would only run the tests that test code
     affected by the changes a developer made \cite{TestCaseSelction}. The state of the automatic test selection tools were limited to Google and Microsoft at the time of the paper. The tools were
-    impractical for use by smaller projects because they were either too imprecise, selected tests that were not affected by the code changes, or unsafe, failed to guarentee all tests not selected
-    were unaffected by the code changes. The paper specifically compares 14 developers manual test choices against a tools automated test selection. The paper found that manual test case selection
-    was most commonly done during debugging. It also found the 73\% of the time manual RTS selected more tests than were necessary and 74\% of the time some tests that were affected were missed.
+    impractical for use by smaller projects because they were either too imprecise or unsafe. If the tools were too imprecice then the tests they selected were not affected by the code changes, while
+    if they were unsafe they failed to guarentee all tests not selected. The paper specifically compares 14 developers manual test case selections against a tools automated test case selection. The paper
+    found that manual test case selection was most commonly done during debugging. It also found the 73\% of the time manual RTS selected more tests than were necessary and 74\% of the time some tests 
+    that were affected were missed.
 
 \subsection{Effective use of CI}
 	Continuous integration has been a fantastic addition to Software Engineering practices by removing repetitive administrative tasks. The less steps a software engineer has to go through when 
@@ -78,15 +80,15 @@
 
 \subsection{Work and methodology}
 	The work into CI so far has shown that CI is useful tool for developers to ease the creation of new features. CI has spread to open source projects and is deployed in most organizations that have 
-    at least one large code project. The security side of how a CI is dangerous if exploited and how to secure a pipeline against attacks has had little research. The most interesting thing that I 
-    think is lacking is the look into how CI can be used to improve the security the project that it is integrated on.
+    at least one large code project. The security side of how a CI is dangerous if exploited and how to secure a pipeline against attacks has had little research. The most interesting thing that 
+    is lacking in this field is how CI can be used to improve the security of the project that it is integrated on.
 	
 	Most of the research does not mention how CI could help improve the security of a project. Some ways this could be done are through targeting common bugs that are already fixed. Some examples
     are ensuring that CSP is enabled, HSTS is enabled, parameterized queries are used, binary protections are enabled in compilation scripts, and unsafe functions are not used. Some of these are
-    implemented already in some source code analysis tools, but these tools often have high levels of false positives. Another use could be in including fuzzing in a pipeline. I have not seen any
-    research into automating fuzzing into testing an application. Depending on the project it could be a very useful tool to find bugs.
+    implemented already in some source code analysis tools, but these tools often have high levels of false positives. Another use could be in including fuzzing in a pipeline. Another area that is
+    lacking in this field is research into automated fuzzing for testing an application. Depending on the project it could be a very useful tool to find bugs.
 
-    The research I am doing involves creating a pipeline with tests that focus on specific frameworks and are tailored towards an application instead of general language based tests. Most source
-    code analysis tools look at specific languages instead of focusing on specific libraries or frameworks \cite{bandit, findbugs, findsecbugs}. My tests will also do some dynamic testing
-    instead of just focusing on source code analysis to verify that the protections are in place in a live application. I am following a similar path to Mozilla in using tests to mandate security
+    The research in this paper involves creating a pipeline with tests that focus on specific frameworks and are tailored towards an application instead of general language based tests. Most source
+    code analysis tools look at specific languages instead of focusing on specific libraries or frameworks \cite{bandit, findbugs, findsecbugs}. The tests will also do some dynamic testing
+    instead of just focusing on source code analysis to verify that the protections are in place in a live application. The projects follows a similar path to Mozilla in using tests to mandate security
     configurations \cite{Vehent}.
