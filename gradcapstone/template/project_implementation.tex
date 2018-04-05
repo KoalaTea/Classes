@@ -34,12 +34,12 @@ dictionaries to keep track of end points. Each dictionary is of an endpoint that
 present if the form submission failed, success$\textunderscore$text which is the text present if the form submission succeeds, a fail$\textunderscore$status$\textunderscore$code which is the status
 code for a failed submission, and a success$\textunderscore$status$\textunderscore$code if the submission succeeds. In the case of there not being one of the four success or fail codes or text then
 they are set to none. In the CSRF test for each endpoint the endpoint is queried and is searched for an input html tag with an id of csrf$\textunderscore$token. If the csrf$\textunderscore$token
-exists the endpoint is POSTed to without the token. The response to this post is checked for each fail condition that is not none, and reach success condition that is not none is checked to make sure
-they are absent. Finally the csrf$\textunderscore$token found earlier is added to the data and POSTed again with the checks from the POST without the token are reversed. The rest of the tests are
-static tests. Only one was implemented because it was found that the rest of the planned ones were already implemented. The os tests are done for potential inject points using os, which is slightly
-different from the original goal in the checks list, but the crypto one does exactly what is being looked for by checking for depreciated crypto. The written test was written as a plugin for bandit,
-it checks for any print statements and recommends using a logging library instead. This one exists partially because most developers already use logging libraries for most projects, the other reason
-is for propper logging management to avoid resource exhaustion.
+exists the endpoint is sent a POST request without the token. The response to this POST is checked for each fail condition that is not none, and reach success condition that is not none is checked 
+to make sure they are absent. Finally the csrf$\textunderscore$token found earlier is added to the data and the POST request is sent again with the checks from the POST without the token are 
+reversed. The rest of the tests are static tests. Only one was implemented because it was found that the rest of the planned ones were already implemented. The os tests are done for potential inject 
+points using os, which is slightly different from the original goal in the checks list, but the crypto one does exactly what is being looked for by checking for depreciated crypto. The written test 
+was written as a plugin for bandit, it checks for any print statements and recommends using a logging library instead. This one exists partially because most developers already use logging libraries 
+for most projects, the other reason is for propper logging management to avoid resource exhaustion.
 
 All of the dynamic tests were easy to transfer over to java, only the url and the requests library had to be changed and the test functioned that same. The caveat is that the java application had to
 be dockerized so that it could be tested with the python code, while the python tests worked by using flasks built in debug client. The static tests are not as easy to transfer over. To use the

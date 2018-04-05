@@ -17,30 +17,30 @@
     such as the source code or a config file, and generating a set of tests from the base or it focuses on taking existing tests and expanding them to cover more features.
 
     One paper from the 2014 Automated Software Engineering conference looked at generating test cases for web applications from an existing selenium test suite \cite{WebTestGeneration}. 
-    This paper goes through the method that is used to generate the new test cases. The method starts by taking a selenium test suite and going though it keeping track of states, 
+    This paper goes through the method that is used to generate the new test cases. The method starts by taking a selenium test suite and going through it keeping track of states, 
     http element interactions, and test case assertions. It uses the base states and element interactions to create a State-Flow Graph, which is a graph of the states with the interactions 
-    that that move from one state to the next and the assertions that are involved to a single state. It then uses a web crawler on each state to discover alternate paths and new states. 
+    that move from one state to the next and the assertions that are involved to a single state. It then uses a web crawler on each state to discover alternate paths and new states. 
     The method then makes use of assertions on the base states to generate new tests for the crawler discovered states. An example given in the paper is that an application that allows you to 
     create notes is tested with selenium by logging in, clicking the create note element, and then verifying that an id element had specific text. The test suite was then expanded by crawling
     to find the edit note interaction and the delete note interaction. These were then clicked and tested using the assertion, verifying that the id was present and changing the text to match the
     new interactions result text.
 
 \subsection{Test case selection}
-    The idea behind test case selection is limiting the number of tests run to save on time during builds. As a code base grows, the number of tests increase. The increase in tests make it more 
-    and more expensive and eventually it becomes too big of a load to do everytime \cite{googletest, googlescale}. This has lead to methods of selecting tests that are relevant to the changes instead
-    of running all of the tests on every code change. The methods of running tests until now, have historically been either rerun all of the tests or manually picking test cases to run based off of 
-    the changes the developer made.
+    The idea behind test case selection is limiting the number of tests run to save on time during builds. As a code base grows, the number of tests increase. The growing number of tests make it more 
+    expensive and eventually it becomes too big of a load to do everytime there is a code change \cite{googletest, googlescale}. This has lead to methods of selecting tests that are relevant to the 
+    changes instead of running all of the tests on every code change. The methods of running tests until now, have historically been either rerun all of the tests or manually picking test cases to 
+    run based off of the changes the developer made.
 
     A paper by Milos Gligoric looks at comparing manual test selection against research made into automatic test selection, where automatic test selection would only run the tests that test code
     affected by the changes a developer made \cite{TestCaseSelction}. The state of the automatic test selection tools were limited to Google and Microsoft at the time of the paper. The tools were
-    impractical for use by smaller projects because they were either too imprecise or unsafe. If the tools were too imprecice then the tests they selected were not affected by the code changes, while
-    if they were unsafe they failed to guarentee all tests not selected. The paper specifically compares 14 developers manual test case selections against a tools automated test case selection. The paper
-    found that manual test case selection was most commonly done during debugging. It also found the 73\% of the time manual RTS selected more tests than were necessary and 74\% of the time some tests 
-    that were affected were missed.
+    impractical for use by smaller projects because they were either too imprecise or unsafe. If the tools were too imprecise then the tests they selected were not affected by the code changes, while
+    if they were unsafe they failed to guarentee all tests not selected were not part of the code change. The paper specifically compares 14 developers manual test case selections against a tools 
+    automated test case selection. The paper found that manual test case selection was most commonly done during debugging. It also found the 73\% of the time manual RTS selected more tests than were 
+    necessary and 74\% of the time some tests that were affected were missed.
 
 \subsection{Effective use of CI}
 	Continuous integration has been a fantastic addition to Software Engineering practices by removing repetitive administrative tasks. The less steps a software engineer has to go through when 
-    producing new code, the more time they can spend on adding features, squashing bugs, or otherwise improving the project code base. There is plenty of research done into the use of CI 
+    producing new code, the more time they can spend on adding features, squashing bugs, or otherwise improving the code base. There is plenty of research done into the use of CI 
     including many case studies, papers and presentations looking at how to setup CI and Continuous Deployment (CD), and papers looking at specific configurations of CI.
 	
 	CI can be integrated with all sorts of tools to increase productivity. The paper How Open Source Projects use Static Code Analysis Tools in Continuous Integration Pipelines by Fiorella Zampett 
@@ -51,19 +51,19 @@
 
 	Two papers look at CI and how it affects projects in general. Continuous Integration and Quality Assurance: A Case Study of Two Open Source Projects by Jesper Holck and Usage, Costs, and Benefits
     of Continuous Integration in Open-Source Projects by Michael Hilton both look at open source projects and how CI affects them \cite{Hilton,Holck}. The papers found that CI often replaces the 
-    practice of having developers make formal design documents. The developers instead just pick from a list of tasks and works on completing them and merging them into the code base. The papers also
+    practice of having developers make formal design documents. The developers instead just pick from a list of tasks and work on completing them and merging them into the code base. The papers also
     found that most developers like CI and plan to use it again in future projects. For projects that did not use CI it was found that the reason was usually just that the developers were not 
-    familiar with how to set up and use CI. Both papers found CI to be successful in increasing productivity, causing projects to release twice as often, accept pull requests quicker, and have 
+    familiar with how to set up and use CI. Both papers found CI to be massively successful in increasing productivity, causing projects to release twice as often, accept pull requests quicker, and have 
     developers less worried about breaking the project. 
 
 \subsection{Security in CI pipelines}
 	Security conferences often look into how to break systems as a way of pointing out the flaws of a configuration. CI servers have also had their share of security professionals testing for exploits
     and looking at the consequences of compromise. CI has also had a little bit of research into how to secure a CI pipeline.
 
-	A presentation at DEFCON named Exploiting Continuous Integration (CI) and Automated Build Systems talked about the consequences of a CI enabled projects \cite{spaceb0x}. The presentation found that 
-    exploiting a repo that holds a CI integration ends with a huge amount of access. If the repo links into an internal CI server, then the attacker ends up with internal network access. If the repo 
-    links to a CI server with multiple CI instances or also runs the CD, then the attacker will get more source code and access to the deployment machines because the CI holds a way to connect to the 
-    deployment servers. Otherwise the attacker ends up with environment variables which often hold extremely sensitive information.
+	A presentation at DEFCON named Exploiting Continuous Integration (CI) and Automated Build Systems talked about the consequences of CI enabled projects \cite{spaceb0x}. The presentation found that 
+    exploiting a repository that holds a CI integration ends with a huge amount of access. If the repository links into an internal CI server, then the attacker ends up with internal network access.
+    If the repository links to a CI server with multiple CI instances or also runs the CD, then the attacker will get more source code and access to the deployment machines because the CI holds a 
+    way to connect to the deployment servers. At the very least the attacker ends up with environment variables which often hold extremely sensitive information.
 
 	A paper by Len Bass called Securing a Deployment Pipeline looks at how to secure a CI pipeline to limit the damage in case of exploitation \cite{Bass}. The paper details a way to break a pipeline 
     down into trusted and untrustworthy parts, segmenting operations until an untrustworthy segment cannot be broken down any more. The CI pipeline then holds parts that are guaranteed to be 
@@ -74,7 +74,7 @@
 \subsection{Use of CI for Security}
     There is little research into the use of CI for security. One presentation by Mozilla looks at the use of CI to tackle easy fixes in response to their bug bounty program \cite{Vehent}. The 
     presentation looks at using CI to ensure that the production environment contains configurations that mirror best practices for common web application security bugs. Some examples include HSTS
-    is enabled, CSP for XSS bugs, various X-OPTIONS headers, Cookies have secure, Cross origin sharing, and Subresource integrity checks. The presentation recommends figuring out a security baseline
+    is enabled, CSP for XSS bugs, various X-OPTIONS headers, Cookies have secure, Cross origin sharing, and Subresource integrity checks. The presentation recommends determining a security baseline
     for a projects CI pipeline, drive testing from the CI pipeline, and empower the team to fix the issues. Another recommendation is not to break on deployment into production as that could break the
     production site if configured poorly. The end result of mozilla's CI setup was a large drop in bug reports that the CI tests aimed to fix.
 
